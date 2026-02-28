@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "event_id": "evt-synology-001",
+  "correlation_id": "corr-synology-001",
+  "source": "SynologyRouter",
+  "received_at": "2026-01-15T10:05:23Z",
+  "message": "<134>Jan 15 10:05:23 SynologyRouter kernel: [UFW BLOCK] IN=eth0 OUT= MAC=00:11:32:xx:xx:xx SRC=198.51.100.42 DST=192.168.1.1 PROTO=TCP SPT=54321 DPT=443",
+  "attributes": {
+    "facility": "local0",
+    "severity": "info",
+    "priority": 134,
+    "hostname": "SynologyRouter",
+    "program": "kernel"
+  }
+}
