@@ -1,5 +1,9 @@
 # Panic! At The Syslog
 
+<p align="center">
+  <img src="docs/panic_logo.png" alt="Panic! At The Syslog" width="500" />
+</p>
+
 An open-source, event-driven syslog insights platform:
 **Ingress → Normalize → Detect → Analyze → API → UI**
 
