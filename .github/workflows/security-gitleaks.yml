@@ -5,12 +5,20 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Run gitleaks
         uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          # Optional but recommended if you added .gitleaks.toml
           config-path: .gitleaks.toml
