@@ -1,6 +1,4 @@
-auth:
-  type: keycloak
-  oidc:
-    issuerUrl: "https://REPLACE-ME/realms/panic"
-    clientId: "panic-ui"
-    clientSecretName: "panic-oidc"
+{{- /*
+  Profile overlay: keycloak
+  Usage: helm install panic-syslog . -f profiles/keycloak.yaml
+*/ -}}

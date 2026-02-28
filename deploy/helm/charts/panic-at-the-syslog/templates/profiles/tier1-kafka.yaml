@@ -1,2 +1,4 @@
-bus:
-  type: kafka
+{{- /*
+  Profile overlay: tier1-kafka
+  Usage: helm install panic-syslog . -f profiles/tier1-kafka.yaml
+*/ -}}

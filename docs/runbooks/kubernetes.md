@@ -18,13 +18,35 @@ The chart supports multiple profiles via `values.yaml` toggles:
 ## Installation outline
 1. Create namespace:
    - `kubectl create namespace panic-syslog`
-2. Install chart:
-   - `helm install panic-syslog deploy/helm/charts/panic-at-the-syslog -n panic-syslog`
-3. Configure ingress/networking according to your environment.
-4. Confirm:
+2. Create required secrets:
+   - `kubectl create secret generic panic-postgres-dsn --from-literal=DATABASE_URL=<dsn> -n panic-syslog`
+   - `kubectl create secret generic panic-jwt --from-literal=JWT_SECRET=<secret> -n panic-syslog`
+3. Install chart with a profile overlay:
+   - Tier 1 (Kafka, default): `helm install panic-syslog deploy/helm/charts/panic-at-the-syslog -f deploy/helm/charts/panic-at-the-syslog/profiles/tier1-kafka.yaml -n panic-syslog`
+   - Tier 2 (NATS): `helm install panic-syslog deploy/helm/charts/panic-at-the-syslog -f deploy/helm/charts/panic-at-the-syslog/profiles/tier2-nats.yaml -n panic-syslog`
+   - Keycloak auth: append `-f deploy/helm/charts/panic-at-the-syslog/profiles/keycloak.yaml` to either install command above
+4. Configure ingress/networking according to your environment.
+5. Confirm:
    - API health
    - UI loads
    - Consumers are running and subscribed
+
+## Profile overlays
+Profile overlay files live at `deploy/helm/charts/panic-at-the-syslog/profiles/` and are applied with `helm install -f <profile>`:
+
+| Profile file      | Description                        |
+|-------------------|------------------------------------|
+| tier1-kafka.yaml  | Tier 1 baseline: Kafka message bus |
+| tier2-nats.yaml   | Tier 2: NATS message bus           |
+| keycloak.yaml     | Keycloak OIDC authentication       |
+
+Multiple profiles can be combined, e.g.:
+```
+helm install panic-syslog deploy/helm/charts/panic-at-the-syslog \
+  -f deploy/helm/charts/panic-at-the-syslog/profiles/tier1-kafka.yaml \
+  -f deploy/helm/charts/panic-at-the-syslog/profiles/keycloak.yaml \
+  -n panic-syslog
+```
 
 ## Notes on dependencies
 You may choose to:
