@@ -1,0 +1,74 @@
+global:
+  nameOverride: ""
+  fullnameOverride: ""
+  imageRegistry: ""
+  imagePullSecrets: []
+  labels: {}
+
+images:
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+  api: { repository: "ghcr.io/REPLACE-ME/panic-api" }
+  ui: { repository: "ghcr.io/REPLACE-ME/panic-ui" }
+  ingress: { repository: "ghcr.io/REPLACE-ME/panic-ingress" }
+  normalizer: { repository: "ghcr.io/REPLACE-ME/panic-normalizer" }
+  detector: { repository: "ghcr.io/REPLACE-ME/panic-detector" }
+  analyzer: { repository: "ghcr.io/REPLACE-ME/panic-analyzer" }
+
+bus:
+  type: kafka  # kafka|nats|rabbitmq
+  kafka:
+    bootstrapServers: "panic-kafka:9092"
+  nats:
+    url: "nats://panic-nats:4222"
+
+storage:
+  type: postgres
+  postgres:
+    dsnSecretName: "panic-postgres-dsn" # secret key: DATABASE_URL
+
+auth:
+  type: builtin # builtin|keycloak|authentik
+  builtin:
+    jwtSecretName: "panic-jwt" # secret key: JWT_SECRET
+  oidc:
+    issuerUrl: ""
+    clientId: ""
+    clientSecretName: ""
+
+llm:
+  primary: ollama
+  ollama:
+    baseUrl: "http://ollama:11434"
+    model: "REPLACE-ME"
+  fallback:
+    type: none # none|external
+    # external plugin is intentionally not configured in core chart
+
+scheduler:
+  type: inproc # inproc|celery|cronjobs
+
+observability:
+  otel:
+    enabled: true
+    endpoint: "" # e.g. http://otel-collector:4317
+
+resources:
+  default:
+    requests: { cpu: "100m", memory: "256Mi" }
+    limits: { cpu: "500m", memory: "512Mi" }
+
+serviceAccount:
+  create: true
+  name: ""
+
+networkPolicy:
+  enabled: false
+
+replicaCount:
+  api: 1
+  ui: 1
+  ingress: 1
+  normalizer: 1
+  detector: 1
+  analyzer: 1

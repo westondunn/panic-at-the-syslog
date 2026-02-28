@@ -1,0 +1,6 @@
+auth:
+  type: keycloak
+  oidc:
+    issuerUrl: "https://REPLACE-ME/realms/panic"
+    clientId: "panic-ui"
+    clientSecretName: "panic-oidc"

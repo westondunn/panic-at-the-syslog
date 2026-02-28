@@ -23,6 +23,7 @@ jobs:
         run: make test
 
   ui:
+    if: ${{ hashFiles('services/ui/package.json') != '' }}
     runs-on: ubuntu-latest
     defaults:
       run:

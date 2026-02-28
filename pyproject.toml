@@ -1,0 +1,12 @@
+[project]
+name = "panic-at-the-syslog"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["services", "libs"]

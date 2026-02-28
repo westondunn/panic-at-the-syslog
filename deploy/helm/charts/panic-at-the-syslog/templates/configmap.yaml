@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "panic.fullname" . }}-config
+  labels:
+    {{- include "panic.labels" . | nindent 4 }}
+data:
+  BUS_TYPE: {{ .Values.bus.type | quote }}
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.bus.kafka.bootstrapServers | quote }}
+  NATS_URL: {{ .Values.bus.nats.url | quote }}
+  AUTH_TYPE: {{ .Values.auth.type | quote }}
+  OIDC_ISSUER_URL: {{ .Values.auth.oidc.issuerUrl | quote }}
+  OIDC_CLIENT_ID: {{ .Values.auth.oidc.clientId | quote }}
+  STORAGE_TYPE: {{ .Values.storage.type | quote }}
+  OLLAMA_BASE_URL: {{ .Values.llm.ollama.baseUrl | quote }}
+  OLLAMA_MODEL: {{ .Values.llm.ollama.model | quote }}
+  OTEL_ENABLED: {{ .Values.observability.otel.enabled | quote }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.observability.otel.endpoint | quote }}

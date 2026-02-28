@@ -1,0 +1,9 @@
+Panic! At The Syslog installed.
+
+Next steps:
+- Ensure Kafka/Postgres are reachable (or installed separately).
+- Provide required secrets:
+  - Postgres DSN secret: {{ .Values.storage.postgres.dsnSecretName }} (DATABASE_URL)
+  - JWT secret: {{ .Values.auth.builtin.jwtSecretName }} (JWT_SECRET)
+- Verify API health:
+  kubectl get pods -n {{ .Release.Namespace }}

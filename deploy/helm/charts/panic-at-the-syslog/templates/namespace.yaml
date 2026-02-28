@@ -1,0 +1,2 @@
+# Optional: namespace creation is typically handled outside Helm.
+# Keep this disabled by default to avoid surprises.
