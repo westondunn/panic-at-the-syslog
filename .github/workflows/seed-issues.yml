@@ -39,9 +39,10 @@ jobs:
 
             # Check if milestone exists
             exists=$(gh api "repos/$REPO/milestones?state=all&per_page=100" --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
-            if [ -n "${exists:-}" ]; then
-              echo "Milestone exists: $title (#$exists)"
-            else
+            if [ -z "$milestone_number" ]; then
+              echo "Milestone \"$milestone_title\" not found for issue \"$title\". Skipping."
+              continue
+            fi
               echo "Creating milestone: $title"
               gh api -X POST "repos/$REPO/milestones" -f title="$title" -f description="$desc" >/dev/null
             fi
@@ -68,24 +69,26 @@ jobs:
             labels_json=$(yq -o=json ".issues[$i].labels" "$SEED")
 
             milestone_number=$(python - <<'PY'
-          import json,sys
-          ms=json.load(open("/tmp/milestones.json"))
-          mt=sys.argv[1]
-          for m in ms:
-              if m["title"]==mt:
-                  print(m["number"])
-                  break
-          PY
+            import json,sys
+            ms=json.load(open("/tmp/milestones.json"))
+            mt=sys.argv[1]
+            for m in ms:
+                if m["title"]==mt:
+                    print(m["number"])
+                    break
+            else:
+                print("")  # Prints empty string if not found
+            PY
             "$milestone_title")
 
             # Skip if issue with exact title exists
             existing=$(gh issue list -R "$REPO" --search "\"$title\" in:title" --json title,number --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
             if [ -n "${existing:-}" ]; then
-              echo "Issue exists: $title (#$existing) — skipping"
+              echo "Issue exists: \"$title\" (#$existing) — skipping"
               continue
             fi
 
-            echo "Creating issue: $title"
+            echo "Creating issue: \"$title\""
             # Create issue
             number=$(gh api -X POST "repos/$REPO/issues" \
               -f title="$title" \
