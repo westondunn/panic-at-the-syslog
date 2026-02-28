@@ -95,7 +95,11 @@ class AnalyzerService:
             analyzed_at=datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             summary=parsed["summary"],
             recommendation="; ".join(parsed["recommended_actions"]),
-            rationale=parsed.get("notes", f"LLM analysis with confidence {normalized_confidence:.2f}"),
+            rationale=parsed.get(
+                "notes",
+                f"LLM analysis for category '{finding.category}' "
+                f"with confidence {normalized_confidence:.2f}.",
+            ),
             priority=priority,
             confidence=normalized_confidence,
             details={**finding.details, "category": finding.category, "evidence": evidence},

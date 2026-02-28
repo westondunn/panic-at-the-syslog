@@ -10,6 +10,7 @@ See ``docs/governance/ai-fallback.md`` for operational guidance.
 from __future__ import annotations
 
 import logging
+import re
 from dataclasses import dataclass
 from typing import Any, Callable
 
@@ -93,8 +94,6 @@ class ExternalLlmPlugin:
         This is a baseline implementation — production deployments should
         extend with regex-based or NER-based redaction.
         """
-        import re
-
         # Redact IPv4 addresses
         text = re.sub(
             r"\b(?:\d{1,3}\.){3}\d{1,3}\b",
