@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "dlq_id": "dlq-det-001",
+  "correlation_id": "corr-001",
+  "failed_at": "2026-01-15T10:00:05Z",
+  "source_topic": "events.normalized.v1",
+  "error": "unexpected error in rule detect_brute_force: division by zero",
+  "error_type": "rule_error",
+  "original_event": {
+    "schema_version": "1.0",
+    "event_id": "evt-001",
+    "correlation_id": "corr-001",
+    "normalized_at": "2026-01-15T10:00:01Z",
+    "source_device": "router-a",
+    "severity": "warn",
+    "summary": "Failed password for admin from 192.0.2.10",
+    "labels": ["auth", "router"]
+  }
+}

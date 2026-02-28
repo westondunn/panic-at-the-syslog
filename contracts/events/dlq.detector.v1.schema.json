@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://panic-at-the-syslog/contracts/events/dlq.detector.v1.schema.json",
+  "title": "dlq.detector.v1",
+  "description": "Dead-letter envelope for events that the detector could not process.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "dlq_id",
+    "correlation_id",
+    "failed_at",
+    "source_topic",
+    "error",
+    "error_type",
+    "original_event"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0"},
+    "dlq_id": {"type": "string", "minLength": 1},
+    "correlation_id": {"type": "string", "minLength": 1},
+    "failed_at": {"type": "string", "format": "date-time"},
+    "source_topic": {"type": "string", "minLength": 1},
+    "error": {"type": "string", "minLength": 1},
+    "error_type": {
+      "type": "string",
+      "enum": ["validation", "rule_error", "unexpected"]
+    },
+    "original_event": {"type": "object"}
+  },
+  "additionalProperties": false
+}

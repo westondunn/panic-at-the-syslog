@@ -304,3 +304,89 @@ def test_correlation_id_propagated_from_events() -> None:
     events = [_auth_event(f"evt-{i}") for i in range(5)]
     findings = detect_brute_force(events)
     assert findings[0].correlation_id == "corr-001"
+
+
+# -- DLQ tests -----------------------------------------------------------------
+
+
+def test_process_sends_to_dlq_on_rule_error(monkeypatch) -> None:
+    bus = InMemoryBus()
+    svc = DetectorService(bus=bus)
+    events = [_auth_event(f"evt-{i}") for i in range(5)]
+
+    def _exploding_rule(_events):
+        raise RuntimeError("kaboom")
+
+    import services.detector.app as app_mod
+
+    monkeypatch.setattr(app_mod, "_RULES", [_exploding_rule])
+
+    result = svc.process(events)
+
+    assert result == []
+    dlq = bus.consume("dlq.detector.v1")
+    assert len(dlq) == 1
+    assert dlq[0]["schema_version"] == "1.0"
+    assert dlq[0]["error_type"] == "rule_error"
+    assert "kaboom" in dlq[0]["error"]
+    assert dlq[0]["source_topic"] == "events.normalized.v1"
+    assert dlq[0]["original_event"]["events"] == events
+    assert dlq[0]["correlation_id"] == "corr-001"
+
+
+def test_process_continues_other_rules_after_dlq(monkeypatch) -> None:
+    bus = InMemoryBus()
+    svc = DetectorService(bus=bus)
+    events = [_auth_event(f"evt-{i}") for i in range(5)]
+
+    def _exploding_rule(_events):
+        raise RuntimeError("kaboom")
+
+    import services.detector.app as app_mod
+
+    monkeypatch.setattr(app_mod, "_RULES", [_exploding_rule, detect_brute_force])
+
+    result = svc.process(events)
+
+    assert len(result) == 1
+    assert result[0]["category"] == "brute-force-suspected"
+    dlq = bus.consume("dlq.detector.v1")
+    assert len(dlq) == 1
+
+
+def test_process_dlq_without_bus_does_not_raise(monkeypatch) -> None:
+    svc = DetectorService(bus=None)
+    events = [_auth_event(f"evt-{i}") for i in range(5)]
+
+    def _exploding_rule(_events):
+        raise RuntimeError("kaboom")
+
+    import services.detector.app as app_mod
+
+    monkeypatch.setattr(app_mod, "_RULES", [_exploding_rule])
+
+    result = svc.process(events)
+    assert result == []
+
+
+def test_dlq_event_has_deterministic_dlq_id(monkeypatch) -> None:
+    bus = InMemoryBus()
+    svc = DetectorService(bus=bus)
+    events = [_auth_event(f"evt-{i}") for i in range(5)]
+
+    def _exploding_rule(_events):
+        raise RuntimeError("kaboom")
+
+    import services.detector.app as app_mod
+
+    monkeypatch.setattr(app_mod, "_RULES", [_exploding_rule])
+
+    svc.process(events)
+    dlq_1 = bus.consume("dlq.detector.v1")
+
+    bus2 = InMemoryBus()
+    svc2 = DetectorService(bus=bus2)
+    svc2.process(events)
+    dlq_2 = bus2.consume("dlq.detector.v1")
+
+    assert dlq_1[0]["dlq_id"] == dlq_2[0]["dlq_id"]
