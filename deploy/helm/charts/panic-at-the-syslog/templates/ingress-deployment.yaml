@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "panic.fullname" . }}-ingress
+  labels:
+    {{- include "panic.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ingress
+spec:
+  replicas: {{ .Values.replicaCount.ingress }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "panic.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: ingress
+  template:
+    metadata:
+      labels:
+        {{- include "panic.labels" . | nindent 8 }}
+        app.kubernetes.io/component: ingress
+    spec:
+      serviceAccountName: {{ default (include "panic.fullname" .) .Values.serviceAccount.name }}
+      containers:
+        - name: ingress
+          image: "{{ .Values.images.ingress.repository }}:{{ .Values.images.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "panic.fullname" . }}-config
+          ports:
+            - containerPort: 514
+              protocol: UDP
+              name: syslog-udp
+            - containerPort: 6514
+              protocol: TCP
+              name: syslog-tls
+          resources:
+            {{- toYaml .Values.resources.default | nindent 12 }}

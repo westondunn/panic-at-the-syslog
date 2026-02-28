@@ -1,0 +1,6 @@
+# Tier 1 profile: Kafka message bus (default)
+# Usage: helm install panic-syslog . -f profiles/tier1-kafka.yaml
+bus:
+  type: kafka
+  kafka:
+    bootstrapServers: "panic-kafka:9092"

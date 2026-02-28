@@ -1,0 +1,6 @@
+# Tier 2 profile: NATS message bus
+# Usage: helm install panic-syslog . -f profiles/tier2-nats.yaml
+bus:
+  type: nats
+  nats:
+    url: "nats://panic-nats:4222"

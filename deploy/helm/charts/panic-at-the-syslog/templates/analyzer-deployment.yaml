@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "panic.fullname" . }}-analyzer
+  labels:
+    {{- include "panic.labels" . | nindent 4 }}
+    app.kubernetes.io/component: analyzer
+spec:
+  replicas: {{ .Values.replicaCount.analyzer }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "panic.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: analyzer
+  template:
+    metadata:
+      labels:
+        {{- include "panic.labels" . | nindent 8 }}
+        app.kubernetes.io/component: analyzer
+    spec:
+      serviceAccountName: {{ default (include "panic.fullname" .) .Values.serviceAccount.name }}
+      containers:
+        - name: analyzer
+          image: "{{ .Values.images.analyzer.repository }}:{{ .Values.images.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "panic.fullname" . }}-config
+          resources:
+            {{- toYaml .Values.resources.default | nindent 12 }}

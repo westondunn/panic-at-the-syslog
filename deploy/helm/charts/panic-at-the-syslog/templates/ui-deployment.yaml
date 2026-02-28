@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "panic.fullname" . }}-ui
+  labels:
+    {{- include "panic.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ui
+spec:
+  replicas: {{ .Values.replicaCount.ui }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "panic.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: ui
+  template:
+    metadata:
+      labels:
+        {{- include "panic.labels" . | nindent 8 }}
+        app.kubernetes.io/component: ui
+    spec:
+      serviceAccountName: {{ default (include "panic.fullname" .) .Values.serviceAccount.name }}
+      containers:
+        - name: ui
+          image: "{{ .Values.images.ui.repository }}:{{ .Values.images.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "panic.fullname" . }}-config
+          ports:
+            - containerPort: 3000
+          # Placeholder: implement /healthz in the UI service to return HTTP 200
+          livenessProbe:
+            httpGet: { path: /healthz, port: 3000 }
+          readinessProbe:
+            httpGet: { path: /healthz, port: 3000 }
+          resources:
+            {{- toYaml .Values.resources.default | nindent 12 }}

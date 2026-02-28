@@ -1,0 +1,10 @@
+# Keycloak auth profile
+# Usage: helm install panic-syslog . -f profiles/keycloak.yaml
+# Prerequisites: create secret panic-oidc with key OIDC_CLIENT_SECRET
+auth:
+  type: keycloak
+  oidc:
+    # Replace with your Keycloak server hostname, e.g. keycloak.example.com
+    issuerUrl: "https://REPLACE-ME/realms/panic"
+    clientId: "panic-ui"
+    clientSecretName: "panic-oidc"

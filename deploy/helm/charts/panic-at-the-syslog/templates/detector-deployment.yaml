@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "panic.fullname" . }}-detector
+  labels:
+    {{- include "panic.labels" . | nindent 4 }}
+    app.kubernetes.io/component: detector
+spec:
+  replicas: {{ .Values.replicaCount.detector }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "panic.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: detector
+  template:
+    metadata:
+      labels:
+        {{- include "panic.labels" . | nindent 8 }}
+        app.kubernetes.io/component: detector
+    spec:
+      serviceAccountName: {{ default (include "panic.fullname" .) .Values.serviceAccount.name }}
+      containers:
+        - name: detector
+          image: "{{ .Values.images.detector.repository }}:{{ .Values.images.tag }}"
+          imagePullPolicy: {{ .Values.images.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "panic.fullname" . }}-config
+          resources:
+            {{- toYaml .Values.resources.default | nindent 12 }}

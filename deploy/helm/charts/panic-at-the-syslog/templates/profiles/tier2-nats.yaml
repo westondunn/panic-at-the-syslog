@@ -1,2 +1,4 @@
-bus:
-  type: nats
+{{- /*
+  Profile overlay: tier2-nats
+  Usage: helm install panic-syslog . -f profiles/tier2-nats.yaml
+*/ -}}
