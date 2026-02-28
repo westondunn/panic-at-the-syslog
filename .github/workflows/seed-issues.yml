@@ -37,8 +37,8 @@ jobs:
             title=$(yq -r ".milestones[$i].title" "$SEED")
             desc=$(yq -r ".milestones[$i].description" "$SEED")
 
-            # Check if milestone exists
-            exists=$(gh api "repos/$REPO/milestones?state=all&per_page=100" --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
+            # Check if milestone exists (paginate to handle >100 milestones)
+            exists=$(gh api -X GET "repos/$REPO/milestones?state=all" --paginate --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
             if [ -z "$exists" ]; then
               echo "Creating milestone: $title"
               gh api -X POST "repos/$REPO/milestones" -f title="$title" -f description="$desc" >/dev/null
@@ -67,7 +67,7 @@ jobs:
             # labels as JSON array
             labels_json=$(yq -o=json ".issues[$i].labels" "$SEED")
 
-            milestone_number=$(python - <<'PY'
+                        milestone_number=$(python - "$milestone_title" <<'PY'
             import json,sys
             ms=json.load(open("/tmp/milestones.json"))
             mt=sys.argv[1]
@@ -78,7 +78,7 @@ jobs:
             else:
                 print("")  # Prints empty string if not found
             PY
-            "$milestone_title")
+            )
 
             # Skip if issue with exact title exists
             existing=$(gh issue list -R "$REPO" --search "\"$title\" in:title" --json title,number --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
