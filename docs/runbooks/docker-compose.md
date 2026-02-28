@@ -2,7 +2,10 @@
 
 This runbook describes running the platform with Docker Compose profiles.
 
+> **New to the project?** Start with [quickstart.md](quickstart.md) for a step-by-step bootstrap guide.
+
 ## Profiles
+
 - `tier1` (default): Kafka + Postgres + core services + UI
 - `tier1-obs`: Adds Prometheus/Grafana (optional)
 - `tier2-nats`: Swaps bus adapter to NATS (if enabled)
@@ -12,14 +15,18 @@ This runbook describes running the platform with Docker Compose profiles.
 > Profiles are examples; exact names should match `deploy/compose/compose.yaml`.
 
 ## Typical flow
-1. Copy `.env.example` to `.env` and fill required values.
+
+1. Copy `.env.example` to `.env` and fill required values (see [quickstart.md](quickstart.md)).
 2. Start Tier 1:
-   - `docker compose --profile tier1 up -d`
+   ```bash
+   docker compose -f deploy/compose/docker-compose.tier1.yml up -d
+   ```
 3. Open UI and verify health endpoints:
-   - `GET /healthz` on API
-   - Service readiness endpoints (if exposed internally)
+   - UI: http://localhost:3000
+   - API: http://localhost:8000/healthz (once implemented)
 
 ## Operational notes
+
 - Syslog ingress port:
   - Prefer mapping to non-privileged ports (e.g., 1514 UDP/TCP) unless you control host networking.
 - Storage:
@@ -29,6 +36,7 @@ This runbook describes running the platform with Docker Compose profiles.
   - Run database migrations via a controlled job/container.
 
 ## Troubleshooting
+
 - If ingestion is silent:
   - Confirm router syslog destination, protocol (UDP vs TCP), and port.
   - Verify container port mappings and host firewall rules.
