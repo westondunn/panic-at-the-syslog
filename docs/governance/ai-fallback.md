@@ -33,3 +33,32 @@ External providers (e.g., OpenAI) may be supported as a plugin, but must be:
 ## Operational guidance
 - Keep external provider integration out of default deploy manifests.
 - Document data flow clearly in the UI when external processing is enabled.
+
+## Plugin architecture
+
+External LLM providers are implemented in `libs/adapters/llm_external_plugin.py`
+as a separate module boundary, wrapped by `ExternalLlmPlugin`.
+
+### Activation
+- **Disabled by default** — not imported by any default service code.
+- Requires explicit opt-in via configuration (e.g., environment variable
+  `PANIC_EXTERNAL_LLM_ENABLED=true`).
+- No default deploy profile (Helm `values.yaml`) enables external providers.
+
+### Policy hooks enforced on every call
+| Hook | Behavior |
+|------|----------|
+| **Redaction** | IPs, MACs, and other PII are replaced with `[REDACTED_*]` tokens before the prompt leaves the system. Enabled by default. |
+| **Audit** | Every call is logged with: timestamp, model id, redaction mode, response length, and an optional callback for custom sinks. |
+| **Budget** | A configurable token/cost cap (`budget_remaining`). Calls are refused once the budget reaches zero. |
+| **Circuit breaker** | After `circuit_breaker_threshold` consecutive failures the breaker opens and all subsequent calls are immediately rejected until manually reset. |
+
+### Policy dataclass
+```python
+@dataclass
+class LlmPolicy:
+    redaction_enabled: bool = True
+    audit_callback: Callable[[dict], None] | None = None
+    budget_remaining: float = 1000.0
+    circuit_breaker_threshold: int = 5
+```

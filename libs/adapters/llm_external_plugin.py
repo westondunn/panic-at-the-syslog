@@ -10,7 +10,7 @@ See ``docs/governance/ai-fallback.md`` for operational guidance.
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Callable
 
 from libs.adapters.llm import LlmAdapter, LlmResponse
