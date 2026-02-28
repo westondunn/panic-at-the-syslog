@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: Panic! At The Syslog API
   version: 0.1.0
-  summary: Contract-first API placeholder for scaffold stage.
+  summary: Read-model API for incidents, findings, insights, devices, and review queue.
 servers:
   - url: http://localhost:8080
 paths:
@@ -16,29 +16,151 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required: [status, service]
-                properties:
-                  status:
-                    type: string
-                    const: ok
-                  service:
-                    type: string
-  /api/v1/incidents:
+                $ref: '#/components/schemas/HealthResponse'
+  /readyz:
     get:
-      operationId: listIncidents
-      summary: Placeholder incidents listing
+      operationId: getReady
+      summary: Readiness check endpoint
       responses:
         '200':
-          description: Placeholder response
+          description: Service is ready
           content:
             application/json:
               schema:
-                type: object
-                required: [items]
-                properties:
-                  items:
-                    type: array
-                    items:
-                      type: object
-components: {}
+                $ref: '#/components/schemas/ReadyResponse'
+  /api/v1/incidents:
+    get:
+      operationId: listIncidents
+      summary: List incidents
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of incidents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemListResponse'
+        '401':
+          description: Missing or invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/findings:
+    get:
+      operationId: listFindings
+      summary: List findings
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of findings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemListResponse'
+        '401':
+          description: Missing or invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/insights:
+    get:
+      operationId: listInsights
+      summary: List insights
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of insights
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemListResponse'
+        '401':
+          description: Missing or invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/devices:
+    get:
+      operationId: listDevices
+      summary: List devices
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemListResponse'
+        '401':
+          description: Missing or invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/review-queue:
+    get:
+      operationId: listReviewQueue
+      summary: List review queue items
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of review queue items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemListResponse'
+        '401':
+          description: Missing or invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, service]
+      properties:
+        status:
+          type: string
+          const: ok
+        service:
+          type: string
+    ReadyResponse:
+      type: object
+      required: [status, checks]
+      properties:
+        status:
+          type: string
+          enum: [ready, degraded]
+        checks:
+          type: object
+          additionalProperties:
+            type: string
+    ItemListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+    ErrorResponse:
+      type: object
+      required: [detail]
+      properties:
+        detail:
+          type: string
