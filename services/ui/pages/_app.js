@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -71,8 +72,17 @@ export default function App({ Component, pageProps }) {
 
   return (
     <div style={styles.wrapper}>
+      <Head>
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <title>Panic! At The Syslog</title>
+      </Head>
+
       {/* External AI processing banner — always visible */}
-      <div style={styles.banner} role="complementary" aria-label="External AI processing status">
+      <div
+        style={styles.banner}
+        role="complementary"
+        aria-label="External AI processing status"
+      >
         <span style={styles.bannerDot} />
         <span>External AI Processing: Disabled</span>
       </div>
