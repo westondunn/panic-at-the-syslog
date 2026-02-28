@@ -9,9 +9,6 @@ paths = [
 
 regexes = [
   '''REPLACE-ME''',
-  '''JWT_SECRET''',
-  '''DATABASE_URL''',
-  '''OIDC_CLIENT_SECRET''',
   '''example\.com''',
   '''http://www\.apache\.org/licenses/LICENSE-2\.0'''
 ]
