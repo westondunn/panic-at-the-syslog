@@ -11,6 +11,12 @@ categories:
   - title: "🧰 Maintenance"
     labels: ["chore", "dependencies"]
 
+autolabeler: []
+exclude-labels: ["skip-changelog"]
+
+version-resolver:
+  default: patch
+
 change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
 template: |
   ## Changes

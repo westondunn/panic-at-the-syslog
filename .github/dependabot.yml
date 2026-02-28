@@ -4,13 +4,31 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    labels:
+      - "dependencies"
+      - "chore"
+    open-pull-requests-limit: 10
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
+    labels:
+      - "dependencies"
+      - "chore"
     open-pull-requests-limit: 10
+    groups:
+      python-dev-dependencies:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: "/services/ui"
     schedule:
       interval: "weekly"
+    labels:
+      - "dependencies"
+      - "chore"
     open-pull-requests-limit: 10
+    groups:
+      ui-dependencies:
+        patterns:
+          - "*"

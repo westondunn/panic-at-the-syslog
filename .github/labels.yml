@@ -2,6 +2,8 @@
   color: d73a4a
 - name: enhancement
   color: a2eeef
+- name: feature
+  color: 1d76db
 - name: security
   color: b60205
 - name: contracts
