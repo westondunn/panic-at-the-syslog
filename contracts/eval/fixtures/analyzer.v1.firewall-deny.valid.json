@@ -6,5 +6,5 @@
     "Verify that SSH access policies are correctly scoped.",
     "Review recent connection logs for successful intrusions."
   ],
-  "confidence": 0.80
+  "confidence": 0.8
 }
