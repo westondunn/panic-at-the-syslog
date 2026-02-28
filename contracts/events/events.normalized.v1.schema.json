@@ -8,6 +8,7 @@
     "event_id",
     "correlation_id",
     "normalized_at",
+    "source_device",
     "severity",
     "summary"
   ],
@@ -16,6 +17,7 @@
     "event_id": {"type": "string", "minLength": 1},
     "correlation_id": {"type": "string", "minLength": 1},
     "normalized_at": {"type": "string", "format": "date-time"},
+    "source_device": {"type": "string", "minLength": 1},
     "severity": {"type": "string", "enum": ["debug", "info", "warn", "error", "critical"]},
     "summary": {"type": "string", "minLength": 1},
     "labels": {

@@ -29,7 +29,9 @@ Syslog ingress events from routers and devices.
 - `schema_version`: `"1.0"`
 - `event_id`: unique identifier
 - `correlation_id`: trace ID
+- `source`: originating device/host
 - `received_at`: ISO 8601 timestamp
+- `message`: raw syslog message text
 
 ### events.normalized.v1
 
@@ -41,7 +43,9 @@ Canonical, vendor-independent event representation produced by the normalizer.
 - `event_id`: unique identifier
 - `correlation_id`: inherited from raw event
 - `normalized_at`: ISO 8601 timestamp
-- `source_device`: string identifier
+- `source_device`: originating device identifier
+- `severity`: one of `"debug"`, `"info"`, `"warn"`, `"error"`, `"critical"`
+- `summary`: human-readable event description
 
 ### findings.realtime.v1
 
