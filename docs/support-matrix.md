@@ -1,44 +1,33 @@
-# Panic! At The Syslog — Support Matrix
-
-This project supports multiple infrastructure options via adapters.
-To avoid a combinatorial explosion, we define support tiers.
+# Panic! At The Syslog - Support Matrix
 
 ## Tier definitions
-- **Tier 1:** CI + end-to-end tests guaranteed on every PR.
-- **Tier 2:** Integration tested (periodic or targeted CI), but not full e2e across all combinations.
-- **Tier 3:** Adapter exists; community-supported; may require additional wiring.
-
-## OSI-only core policy
-The **core distribution** is OSI-approved open source only.
-Non-OSI/proprietary integrations must be shipped as optional plugins and disabled by default.
+- Tier 1: Required for CI, OSS-only defaults.
+- Tier 2: Optional integrations with periodic validation.
+- Tier 3: Community or proprietary plugin paths.
 
 ## Tier 1 (default, OSI-only)
-| Category | Implementation | Notes |
-|---|---|---|
-| Bus | Apache Kafka | Primary CI/e2e baseline |
-| Storage | PostgreSQL | Source of truth |
-| Auth | Built-in JWT | Local users/roles |
-| LLM | Ollama adapter | Local-first endpoint |
-| Observability | OpenTelemetry + Prometheus | Metrics + tracing hooks |
+| Category | Adapter | License class | Default |
+|---|---|---|---|
+| Bus | Kafka adapter stub | Apache-2.0 ecosystem | yes |
+| Storage | PostgreSQL profile | PostgreSQL License | yes |
+| Auth | Local JWT stub | Project code (MIT) | yes |
+| LLM | Ollama adapter stub | MIT ecosystem | yes |
+| Scheduler | Inline scheduler | Project code (MIT) | yes |
+| Search | In-memory search stub | Project code (MIT) | yes |
 
-## Tier 2 (OSI-only, integration-tested)
-| Category | Implementation | Notes |
-|---|---|---|
-| Bus | NATS JetStream | Keep watch on ecosystem governance |
-| Auth | Keycloak (OIDC) | Enterprise-friendly |
-| Search | OpenSearch | Full-text search; heavier |
+## Tier 2 (optional, OSI-only)
+| Category | Adapter | License class | Default |
+|---|---|---|---|
+| Bus | NATS adapter stub | Apache-2.0 ecosystem | no |
+| Auth | OIDC via Keycloak profile | Apache-2.0 | no |
+| Search | OpenSearch profile | Apache-2.0 | no |
 
-## Tier 3 (varies)
-| Category | Implementation | Notes |
-|---|---|---|
-| Bus | RabbitMQ | Viable, different semantics |
-| Analytics | ClickHouse | High-volume analytical queries |
-| Auth | authentik | OIDC alternative |
-| LLM fallback | External provider plugin | Proprietary; disabled by default |
+## Tier 3 (optional plugins)
+| Category | Adapter | License class | Default |
+|---|---|---|---|
+| LLM | OpenAI plugin stub | proprietary service | disabled |
 
-## Guidance for contributors
-- New adapters must:
-  - Implement the appropriate interface in `/libs/adapters/**`
-  - Include tests (unit + contract conformance)
-  - Update this matrix and the licensing policy
-- Anything that threatens OSI-only core must be isolated behind a plugin boundary.
+## Policy alignment
+- The default stack remains OSI-only.
+- Proprietary services are isolated behind adapter plugins and disabled by default.
+- Changes to tiers require updates to this matrix and `docs/governance/license-policy.md`.

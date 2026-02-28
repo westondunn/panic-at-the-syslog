@@ -1,0 +1,44 @@
+openapi: 3.1.0
+info:
+  title: Panic! At The Syslog API
+  version: 0.1.0
+  summary: Contract-first API placeholder for scaffold stage.
+servers:
+  - url: http://localhost:8080
+paths:
+  /healthz:
+    get:
+      operationId: getHealth
+      summary: Health check endpoint
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, service]
+                properties:
+                  status:
+                    type: string
+                    const: ok
+                  service:
+                    type: string
+  /api/v1/incidents:
+    get:
+      operationId: listIncidents
+      summary: Placeholder incidents listing
+      responses:
+        '200':
+          description: Placeholder response
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+components: {}

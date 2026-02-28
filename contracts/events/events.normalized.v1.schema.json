@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://panic-at-the-syslog/contracts/events/events.normalized.v1.schema.json",
+  "title": "events.normalized.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "event_id",
+    "correlation_id",
+    "normalized_at",
+    "severity",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0"},
+    "event_id": {"type": "string", "minLength": 1},
+    "correlation_id": {"type": "string", "minLength": 1},
+    "normalized_at": {"type": "string", "format": "date-time"},
+    "severity": {"type": "string", "enum": ["debug", "info", "warn", "error", "critical"]},
+    "summary": {"type": "string", "minLength": 1},
+    "labels": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "additionalProperties": false
+}

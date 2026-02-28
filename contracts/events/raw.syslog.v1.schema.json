@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://panic-at-the-syslog/contracts/events/raw.syslog.v1.schema.json",
+  "title": "raw.syslog.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "event_id",
+    "correlation_id",
+    "source",
+    "received_at",
+    "message"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0"},
+    "event_id": {"type": "string", "minLength": 1},
+    "correlation_id": {"type": "string", "minLength": 1},
+    "source": {"type": "string", "minLength": 1},
+    "received_at": {"type": "string", "format": "date-time"},
+    "message": {"type": "string", "minLength": 1},
+    "attributes": {
+      "type": "object",
+      "additionalProperties": {"type": ["string", "number", "boolean", "null"]}
+    }
+  },
+  "additionalProperties": false
+}

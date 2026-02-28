@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "event_id": "evt-001",
+  "correlation_id": "corr-001",
+  "source": "router-a",
+  "received_at": "2026-01-15T10:00:00Z",
+  "message": "Accepted password for admin from 192.0.2.10",
+  "attributes": {
+    "facility": "auth",
+    "severity": "info"
+  }
+}
