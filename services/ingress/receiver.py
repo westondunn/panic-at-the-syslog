@@ -22,7 +22,7 @@ class SyslogUDPProtocol(asyncio.DatagramProtocol):
 
     def datagram_received(self, data: bytes, addr: tuple[str, int]) -> None:
         try:
-            line = data.decode("utf-8", errors="replace").strip("\n\r")
+            line = data.decode("utf-8", errors="replace").strip("\r\n")
             self._service.receive_syslog_line(line, peer_address=addr[0])
         except ValidationError:
             logger.warning(
@@ -54,7 +54,7 @@ class SyslogTCPHandler:
                 data = await reader.readline()
                 if not data:
                     break
-                line = data.decode("utf-8", errors="replace").strip("\n\r")
+                line = data.decode("utf-8", errors="replace").strip("\r\n")
                 try:
                     self._service.receive_syslog_line(
                         line, peer_address=peer_address,
