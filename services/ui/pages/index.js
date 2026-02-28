@@ -1,4 +1,4 @@
-import Link from "next/link";
+import StatCard from "../components/StatCard";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:8000";
 
@@ -36,57 +36,73 @@ export async function getServerSideProps() {
   };
 }
 
-const LINKED_CARDS = [
-  { label: "Incidents", key: "incidents", href: "/incidents", color: "#ef4444" },
-  { label: "Recommendations", key: "insights", href: "/recommendations", color: "#3b82f6" },
-  { label: "Review Queue", key: "reviewQueue", href: "/review", color: "#8b5cf6" },
-];
-
-// Findings are surfaced as a count-only stat (no dedicated page yet).
 const STAT_CARDS = [
-  { label: "Findings", key: "findings", color: "#f97316" },
+  {
+    label: "Incidents",
+    key: "incidents",
+    gradient: "error",
+    icon: "🔴",
+    href: "/incidents",
+  },
+  { label: "Findings", key: "findings", gradient: "warning", icon: "🔍" },
+  {
+    label: "Recommendations",
+    key: "insights",
+    gradient: "info",
+    icon: "💡",
+    href: "/recommendations",
+  },
+  {
+    label: "Review Queue",
+    key: "reviewQueue",
+    gradient: "dark",
+    icon: "📋",
+    href: "/review",
+  },
 ];
-
-const styles = {
-  heading: { fontSize: "1.5rem", fontWeight: "700", marginBottom: "0.25rem" },
-  sub: { color: "#64748b", marginBottom: "2rem", fontSize: "0.95rem" },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-    gap: "1rem",
-  },
-  card: {
-    borderRadius: "0.5rem",
-    border: "1px solid #e2e8f0",
-    backgroundColor: "#ffffff",
-    padding: "1.25rem 1.5rem",
-    textDecoration: "none",
-    color: "inherit",
-    display: "block",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-  },
-  cardCount: { fontSize: "2.5rem", fontWeight: "800", lineHeight: "1" },
-  cardLabel: { fontSize: "0.875rem", color: "#64748b", marginTop: "0.4rem" },
-};
 
 export default function Dashboard({ counts }) {
   return (
     <>
-      <h1 style={styles.heading}>Dashboard</h1>
-      <p style={styles.sub}>Summary of current system state.</p>
-      <div style={styles.grid}>
-        {LINKED_CARDS.map(({ label, key, href, color }) => (
-          <Link key={key} href={href} style={styles.card}>
-            <div style={{ ...styles.cardCount, color }}>{counts[key]}</div>
-            <div style={styles.cardLabel}>{label}</div>
-          </Link>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-text-primary">Dashboard</h1>
+        <p className="mt-1 text-sm text-text-secondary">
+          Summary of current system state.
+        </p>
+      </div>
+
+      {/* Stat cards grid */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        {STAT_CARDS.map(({ label, key, gradient, icon, href }) => (
+          <StatCard
+            key={key}
+            label={label}
+            value={counts[key]}
+            gradient={gradient}
+            icon={icon}
+            href={href}
+          />
         ))}
-        {STAT_CARDS.map(({ label, key, color }) => (
-          <div key={key} style={{ ...styles.card, cursor: "default" }}>
-            <div style={{ ...styles.cardCount, color }}>{counts[key]}</div>
-            <div style={styles.cardLabel}>{label}</div>
-          </div>
-        ))}
+      </div>
+
+      {/* Placeholder for future chart / activity panels */}
+      <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="rounded-card bg-surface p-6 shadow-card">
+          <h3 className="mb-2 text-base font-semibold text-text-primary">
+            Recent Activity
+          </h3>
+          <p className="text-sm text-text-secondary">
+            Activity timeline will appear here once events are flowing.
+          </p>
+        </div>
+        <div className="rounded-card bg-surface p-6 shadow-card">
+          <h3 className="mb-2 text-base font-semibold text-text-primary">
+            Pipeline Health
+          </h3>
+          <p className="text-sm text-text-secondary">
+            Pipeline metrics and throughput charts will appear here.
+          </p>
+        </div>
       </div>
     </>
   );

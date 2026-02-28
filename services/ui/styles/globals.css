@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+/* ── Material Dashboard Design Tokens ───────────────────── */
+@theme {
+  /* Primary palette – Material Dashboard blues/darks */
+  --color-primary-50: #e8eaf6;
+  --color-primary-100: #c5cae9;
+  --color-primary-200: #9fa8da;
+  --color-primary-300: #7986cb;
+  --color-primary-400: #5c6bc0;
+  --color-primary-500: #344767;
+  --color-primary-600: #2c3e5a;
+  --color-primary-700: #1a2035;
+  --color-primary-800: #111927;
+  --color-primary-900: #0a0f1a;
+
+  /* Neutral / surface */
+  --color-surface: #ffffff;
+  --color-background: #f0f2f5;
+  --color-sidebar: #1a2035;
+  --color-sidebar-active: #1a73e8;
+
+  /* Text */
+  --color-text-primary: #344767;
+  --color-text-secondary: #7b809a;
+  --color-text-disabled: #adb5bd;
+  --color-text-inverse: #ffffff;
+
+  /* Status / severity */
+  --color-success: #4caf50;
+  --color-info: #1a73e8;
+  --color-warning: #fb8c00;
+  --color-error: #f44335;
+
+  /* Gradients used on stat cards */
+  --color-grad-dark-start: #42424a;
+  --color-grad-dark-end: #191919;
+  --color-grad-info-start: #49a3f1;
+  --color-grad-info-end: #1a73e8;
+  --color-grad-success-start: #66bb6a;
+  --color-grad-success-end: #43a047;
+  --color-grad-warning-start: #ffa726;
+  --color-grad-warning-end: #fb8c00;
+  --color-grad-error-start: #ef5350;
+  --color-grad-error-end: #e53935;
+
+  /* Shadows – Material-style elevation */
+  --shadow-card: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 4px 20px 0 rgba(0, 0, 0, 0.1);
+  --shadow-sidebar: 2px 0 16px 0 rgba(0, 0, 0, 0.12);
+  --shadow-stat:
+    0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.1);
+
+  /* Border radius */
+  --radius-card: 0.75rem;
+  --radius-stat: 0.75rem;
+  --radius-badge: 0.375rem;
+
+  /* Typography */
+  --font-sans:
+    "Roboto", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* ── Base resets ────────────────────────────────────────── */
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+/* ── Utility gradient classes for stat cards ─────────────── */
+@layer utilities {
+  .gradient-dark {
+    background: linear-gradient(
+      195deg,
+      var(--color-grad-dark-start),
+      var(--color-grad-dark-end)
+    );
+  }
+  .gradient-info {
+    background: linear-gradient(
+      195deg,
+      var(--color-grad-info-start),
+      var(--color-grad-info-end)
+    );
+  }
+  .gradient-success {
+    background: linear-gradient(
+      195deg,
+      var(--color-grad-success-start),
+      var(--color-grad-success-end)
+    );
+  }
+  .gradient-warning {
+    background: linear-gradient(
+      195deg,
+      var(--color-grad-warning-start),
+      var(--color-grad-warning-end)
+    );
+  }
+  .gradient-error {
+    background: linear-gradient(
+      195deg,
+      var(--color-grad-error-start),
+      var(--color-grad-error-end)
+    );
+  }
+}
