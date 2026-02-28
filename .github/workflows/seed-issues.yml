@@ -1,0 +1,99 @@
+name: Seed roadmap issues
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed_file:
+        description: "Path to seed file"
+        required: true
+        default: "roadmap/issues.yml"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+          yq --version
+
+      - name: Create milestones (idempotent)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SEED: ${{ inputs.seed_file }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          count=$(yq '.milestones | length' "$SEED")
+          for i in $(seq 0 $((count-1))); do
+            title=$(yq -r ".milestones[$i].title" "$SEED")
+            desc=$(yq -r ".milestones[$i].description" "$SEED")
+
+            # Check if milestone exists
+            exists=$(gh api "repos/$REPO/milestones?state=all&per_page=100" --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
+            if [ -n "${exists:-}" ]; then
+              echo "Milestone exists: $title (#$exists)"
+            else
+              echo "Creating milestone: $title"
+              gh api -X POST "repos/$REPO/milestones" -f title="$title" -f description="$desc" >/dev/null
+            fi
+          done
+
+      - name: Create issues (idempotent)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SEED: ${{ inputs.seed_file }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          # Build a milestone title->number map
+          gh api "repos/$REPO/milestones?state=all&per_page=100" > /tmp/milestones.json
+
+          issues_count=$(yq '.issues | length' "$SEED")
+          for i in $(seq 0 $((issues_count-1))); do
+            title=$(yq -r ".issues[$i].title" "$SEED")
+            milestone_title=$(yq -r ".issues[$i].milestone" "$SEED")
+            body=$(yq -r ".issues[$i].body" "$SEED")
+
+            # labels as JSON array
+            labels_json=$(yq -o=json ".issues[$i].labels" "$SEED")
+
+            milestone_number=$(python - <<'PY'
+          import json,sys
+          ms=json.load(open("/tmp/milestones.json"))
+          mt=sys.argv[1]
+          for m in ms:
+              if m["title"]==mt:
+                  print(m["number"])
+                  break
+          PY
+            "$milestone_title")
+
+            # Skip if issue with exact title exists
+            existing=$(gh issue list -R "$REPO" --search "\"$title\" in:title" --json title,number --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
+            if [ -n "${existing:-}" ]; then
+              echo "Issue exists: $title (#$existing) — skipping"
+              continue
+            fi
+
+            echo "Creating issue: $title"
+            # Create issue
+            number=$(gh api -X POST "repos/$REPO/issues" \
+              -f title="$title" \
+              -f body="$body" \
+              -F milestone=$milestone_number \
+              --jq '.number')
+
+            # Apply labels (separate call; robust)
+            echo "{\"labels\": $labels_json}" > /tmp/labels.json
+            gh api -X POST "repos/$REPO/issues/$number/labels" --input /tmp/labels.json >/dev/null
+          done

@@ -1,0 +1,280 @@
+# roadmap/issues.yml
+# Panic! At The Syslog — roadmap seed
+# Idempotency: issues are matched by exact title; if found, skipped.
+
+milestones:
+  - title: "v0.1 Scaffold Baseline"
+    description: "Repo hygiene, CI green, contracts scaffolding, deploy skeleton, governance docs."
+  - title: "v0.2 Ingestion + Normalization (MVP)"
+    description: "Syslog ingestion + canonical normalization for Synology Router."
+  - title: "v0.3 Detection + Findings (MVP)"
+    description: "Deterministic real-time detections emitting findings."
+  - title: "v0.4 Analyzer + Prompt/Eval Harness (MVP)"
+    description: "Ollama analyzer with strict JSON output + prompt versioning + eval harness."
+  - title: "v0.5 API + UI + Review + Retention (MVP)"
+    description: "Minimal UI + API + review workflow + retention jobs."
+  - title: "v0.6 Hardening + Observability"
+    description: "Security hardening, OTel/Prometheus, DLQ/replay, performance targets."
+  - title: "v1.0 Production Ready OSS Release"
+    description: "Release process, docs completeness, support matrix maturity, supply chain hygiene."
+
+issues:
+  # v0.1
+  - title: "chore(repo): finalize OSS repo hygiene baseline"
+    milestone: "v0.1 Scaffold Baseline"
+    labels: ["type:chore", "area:governance", "prio:p0"]
+    body: |
+      Deliverables:
+      - LICENSE (Apache-2.0) + NOTICE
+      - CODE_OF_CONDUCT (full text) + SECURITY + CONTRIBUTING
+      - .editorconfig/.gitattributes/.gitignore/.dockerignore
+      - Copilot instructions + skills + AGENTS.md
+      Acceptance:
+      - Repo has no secrets; gitleaks passes
+      - Docs explain OSI-only core + external plugins disabled by default
+
+  - title: "ci: stabilize required checks (lint/test/contracts/e2e) on PR and push"
+    milestone: "v0.1 Scaffold Baseline"
+    labels: ["type:chore", "area:governance", "area:observability", "prio:p0"]
+    body: |
+      Deliverables:
+      - Workflows run on pull_request and push to main
+      - Gitleaks configured (fetch-depth 0, GITHUB_TOKEN env)
+      - Minimal Makefile targets exist and are deterministic
+      Acceptance:
+      - Branch rules can require checks without “Expected” deadlocks
+      - Checks pass on main after merge
+
+  - title: "contracts: add v1 schemas + fixtures for raw/normalized/findings/insights"
+    milestone: "v0.1 Scaffold Baseline"
+    labels: ["type:story", "area:contracts", "prio:p0", "tier:1"]
+    body: |
+      Deliverables:
+      - JSON Schemas:
+        - raw.syslog.v1
+        - events.normalized.v1
+        - findings.realtime.v1
+        - insights.recommendations.v1
+      - Fixtures that validate for each schema
+      Acceptance:
+      - make contract-validate passes
+      - Schema versioning rules documented in docs/contracts.md
+
+  - title: "deploy: Helm chart skeleton (panic-at-the-syslog) with Tier 1 values"
+    milestone: "v0.1 Scaffold Baseline"
+    labels: ["type:story", "area:deploy", "prio:p1", "tier:1"]
+    body: |
+      Deliverables:
+      - Chart.yaml, values.yaml, templates for services (placeholders ok)
+      - profiles/ overlays (tier1-kafka, tier2-nats, keycloak)
+      Acceptance:
+      - helm template renders successfully
+      - docs/runbooks/kubernetes.md references chart usage
+
+  # v0.2
+  - title: "ingress: syslog ingest to bus (raw.syslog.v1) with spool option"
+    milestone: "v0.2 Ingestion + Normalization (MVP)"
+    labels: ["type:story", "area:ingress", "prio:p0", "tier:1"]
+    body: |
+      Implement syslog ingestion:
+      - syslog-ng/rsyslog container OR direct receiver
+      - publish raw.syslog.v1 messages to Kafka
+      - optional on-disk spool with TTL
+      Acceptance:
+      - can ingest sample Synology Router syslog lines
+      - emits valid raw.syslog.v1 per schema
+      - rate limiting / max line length enforced
+
+  - title: "normalizer: parse Synology Router syslog to events.normalized.v1"
+    milestone: "v0.2 Ingestion + Normalization (MVP)"
+    labels: ["type:story", "area:normalizer", "prio:p0", "tier:1"]
+    body: |
+      Deliverables:
+      - Parser pipeline for common Synology Router syslog patterns
+      - Device identity hints (ip/mac/hostname where available)
+      - Publish canonical events.normalized.v1
+      Acceptance:
+      - fixtures cover multiple message variants
+      - invalid input goes to DLQ with error context
+
+  # v0.3
+  - title: "detector: implement baseline detections -> findings.realtime.v1"
+    milestone: "v0.3 Detection + Findings (MVP)"
+    labels: ["type:story", "area:detector", "prio:p0", "tier:1"]
+    body: |
+      Minimum detections:
+      - brute force/auth failures
+      - WAN flaps / link instability
+      - repeated firewall denies/blocks
+      - DHCP churn
+      Acceptance:
+      - emits findings with severity + evidence pointers
+      - idempotent consumer behavior verified
+
+  - title: "detector: DLQ + replay tooling for poison messages"
+    milestone: "v0.3 Detection + Findings (MVP)"
+    labels:
+      ["type:task", "area:detector", "area:observability", "prio:p1", "tier:1"]
+    body: |
+      Deliverables:
+      - DLQ topic strategy
+      - replay CLI/tooling (reprocess from DLQ to main stream)
+      Acceptance:
+      - documented runbook for DLQ triage and replay
+
+  # v0.4
+  - title: "analyzer: Ollama adapter + structured JSON insights.recommendations.v1"
+    milestone: "v0.4 Analyzer + Prompt/Eval Harness (MVP)"
+    labels: ["type:story", "area:analyzer", "prio:p0", "tier:1"]
+    body: |
+      Deliverables:
+      - LLMAdapter interface
+      - Ollama implementation (remote endpoint)
+      - Prompt v1 + output schema validation
+      Acceptance:
+      - analyzer rejects non-JSON outputs
+      - emits insights.recommendations.v1 with confidence + evidence
+
+  - title: "prompts: versioning + eval harness for analyzer prompt"
+    milestone: "v0.4 Analyzer + Prompt/Eval Harness (MVP)"
+    labels:
+      ["type:story", "area:contracts", "area:analyzer", "prio:p1", "tier:1"]
+    body: |
+      Deliverables:
+      - /contracts/prompts/analyzer.v1/*
+      - /contracts/eval fixtures and expected structure checks
+      Acceptance:
+      - CI job validates prompt outputs against schema (smoke-level)
+
+  - title: "llm: external provider plugin stub (disabled by default, governed)"
+    milestone: "v0.4 Analyzer + Prompt/Eval Harness (MVP)"
+    labels:
+      ["type:task", "area:security", "area:governance", "prio:p2", "tier:3"]
+    body: |
+      Deliverables:
+      - plugin boundary (separate package/module)
+      - policy hooks: redaction, audit, budgets, circuit breaker
+      Acceptance:
+      - not enabled by any default deploy profile
+      - docs/governance/ai-fallback.md updated
+
+  # v0.5
+  - title: "api: FastAPI read-model endpoints + auth (JWT) + health"
+    milestone: "v0.5 API + UI + Review + Retention (MVP)"
+    labels: ["type:story", "area:api", "prio:p0", "tier:1"]
+    body: |
+      Deliverables:
+      - endpoints: incidents/findings/insights/devices/review-queue
+      - /healthz and /readyz
+      - JWT auth with admin/viewer roles
+      Acceptance:
+      - OpenAPI published and matches /contracts/api/openapi.yaml
+
+  - title: "ui: minimal dashboard + incidents + recommendations + review queue"
+    milestone: "v0.5 API + UI + Review + Retention (MVP)"
+    labels: ["type:story", "area:ui", "prio:p0", "tier:1"]
+    body: |
+      Deliverables:
+      - pages: dashboard, incidents, recommendations, review
+      - basic filtering/search
+      Acceptance:
+      - no secrets in client
+      - clear labeling for external AI (even if disabled)
+
+  - title: "retention: review-driven TTL purge + pin critical evidence"
+    milestone: "v0.5 API + UI + Review + Retention (MVP)"
+    labels:
+      ["type:story", "area:security", "area:governance", "prio:p0", "tier:1"]
+    body: |
+      Deliverables:
+      - raw spool TTL purge job
+      - pin/hold workflow from UI/API
+      - critical retained indefinitely policy implementation
+      Acceptance:
+      - purge actions are auditable
+      - retention behavior matches docs/governance/data-retention.md
+
+  - title: "deploy: Tier 1 Docker Compose (Kafka+Postgres) end-to-end"
+    milestone: "v0.5 API + UI + Review + Retention (MVP)"
+    labels: ["type:story", "area:deploy", "prio:p1", "tier:1"]
+    body: |
+      Deliverables:
+      - compose profiles: tier1, tier1-obs(optional)
+      - runbook: docs/runbooks/docker-compose.md
+      Acceptance:
+      - make e2e-tier1 passes on CI using compose
+
+  # v0.6
+  - title: "observability: OpenTelemetry tracing + Prometheus metrics + dashboards"
+    milestone: "v0.6 Hardening + Observability"
+    labels: ["type:story", "area:observability", "prio:p0", "tier:1"]
+    body: |
+      Deliverables:
+      - structured logs with correlation_id
+      - metrics: ingest rate, lag, DLQ count, analyzer latency
+      - basic Grafana dashboards (optional)
+      Acceptance:
+      - docs/runbooks include troubleshooting via metrics/traces
+
+  - title: "security: harden API/ingest (rate limit, allowlist, headers, CORS)"
+    milestone: "v0.6 Hardening + Observability"
+    labels: ["type:story", "area:security", "prio:p0", "tier:1"]
+    body: |
+      Deliverables:
+      - ingest allowlist + rate limiting
+      - API secure headers, CORS config
+      - threat model section updated
+      Acceptance:
+      - documented secure defaults
+      - tests for authz boundaries
+
+  - title: "reliability: backpressure, retries, and replay runbooks"
+    milestone: "v0.6 Hardening + Observability"
+    labels:
+      [
+        "type:story",
+        "area:observability",
+        "area:governance",
+        "prio:p1",
+        "tier:1",
+      ]
+    body: |
+      Deliverables:
+      - retry/backoff policies per consumer
+      - backpressure behavior documented
+      - replay tooling + runbook finalized
+      Acceptance:
+      - no unbounded memory growth under load tests (basic)
+
+  # v1.0
+  - title: "release: versioning, changelog, SBOM, supply-chain checks"
+    milestone: "v1.0 Production Ready OSS Release"
+    labels: ["type:story", "area:governance", "prio:p0", "tier:1"]
+    body: |
+      Deliverables:
+      - semantic versioning policy
+      - release notes automation
+      - SBOM generation (if feasible)
+      - dependency scanning/trivy stabilized
+      Acceptance:
+      - documented release process
+      - reproducible build instructions
+
+  - title: "docs: production deployment guide + ops runbooks"
+    milestone: "v1.0 Production Ready OSS Release"
+    labels: ["type:story", "area:docs", "prio:p0", "tier:1"]
+    body: |
+      Deliverables:
+      - complete docs for deploy, backup/restore, monitoring, security
+      Acceptance:
+      - “new user can deploy” walkthroughs validated
+
+  - title: "support: finalize Tier 1 guarantees + Tier 2/3 adapter documentation"
+    milestone: "v1.0 Production Ready OSS Release"
+    labels: ["type:story", "area:governance", "prio:p1", "tier:1"]
+    body: |
+      Deliverables:
+      - support-matrix.md updated with tested combos
+      - contribution docs for adding adapters
+      Acceptance:
+      - CI clearly indicates Tier 1 coverage

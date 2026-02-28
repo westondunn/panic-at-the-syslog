@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://panic-at-the-syslog/contracts/events/insights.recommendations.v1.schema.json",
+  "title": "insights.recommendations.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "insight_id",
+    "finding_id",
+    "correlation_id",
+    "analyzed_at",
+    "summary",
+    "recommendation",
+    "rationale",
+    "priority",
+    "confidence"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "insight_id": { "type": "string", "minLength": 1 },
+    "finding_id": { "type": "string", "minLength": 1 },
+    "correlation_id": { "type": "string", "minLength": 1 },
+    "analyzed_at": { "type": "string", "format": "date-time" },
+    "summary": { "type": "string", "minLength": 1 },
+    "recommendation": { "type": "string", "minLength": 1 },
+    "rationale": { "type": "string", "minLength": 1 },
+    "priority": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "details": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": false
+}
