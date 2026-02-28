@@ -1,15 +1,18 @@
-# Panic! At The Syslog — Codex Working Agreements
+﻿# Panic! At The Syslog - Codex Working Agreements
 
 ## Mission
+
 Build an open-source, modular syslog insights platform with:
-- Pipeline architecture (Ingress → Normalize → Detect → Analyze → API → UI)
+
+- Pipeline architecture (Ingress -> Normalize -> Detect -> Analyze -> API -> UI)
 - Adapter-first design (bus, storage, auth, search, llm, scheduler)
 - OSI-only defaults in the core distribution
-- Deployable via Docker Compose OR Kubernetes (Helm)
+- Deployable via Docker Compose or Kubernetes (Helm)
 
 ## Golden rules
+
 1. Contracts first: update `/contracts/**` before implementation.
-2. No direct coupling between services via shared DB tables; services integrate via the message bus + public APIs.
+2. No direct coupling between services via shared DB tables; services integrate via the message bus and public APIs.
 3. Every external dependency must be behind an adapter interface in `/libs/adapters/**`.
 4. Maintain Tier support policy:
    - Tier 1: Kafka + Postgres + JWT + Ollama (CI/e2e)
@@ -18,13 +21,16 @@ Build an open-source, modular syslog insights platform with:
 6. Treat model weights as a licensing surface: ship OSI-friendly defaults and document non-OSI models as user-supplied.
 
 ## Quality gates
+
 - Run `make lint` and `make test` on changes.
-- Validate schemas: `make contract-validate`
-- If contracts changed, add/adjust fixtures under `/contracts/eval/fixtures`.
+- Validate schemas: `make contract-validate`.
+- If contracts changed, add or adjust fixtures under `/contracts/eval/fixtures`.
 
 ## Security
-- No secrets committed, ever.
-- External LLM calls (if present) MUST be redacted + audited + budgeted.
+
+- No secrets committed.
+- External LLM calls (if present) must be redacted, audited, and budgeted.
 
 ## Tone
-Be precise, be boring, be correct. A little panic is allowed in the product name only.
+
+Be precise, be boring, be correct.

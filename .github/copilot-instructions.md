@@ -1,8 +1,8 @@
-# Panic! At The Syslog — Copilot Repository Instructions
+# Panic! At The Syslog - Copilot Repository Instructions
 
 ## What this repo is
 Panic! At The Syslog is an open-source, event-driven pipeline for syslog ingestion and actionable recommendations:
-Ingress → Normalize → Detect → Analyze → API → UI.
+Ingress -> Normalize -> Detect -> Analyze -> API -> UI.
 
 ## Non-negotiables
 - Contracts-first: update `/contracts/**` (schemas + fixtures) before changing producers/consumers.
@@ -14,17 +14,17 @@ Ingress → Normalize → Detect → Analyze → API → UI.
 - Bus: Kafka
 - Storage: Postgres
 - Auth: built-in JWT (local users/roles)
-- LLM: Ollama adapter (remote endpoint)
+- LLM: Ollama adapter (local-first)
 - Observability: OpenTelemetry hooks + Prometheus
 
-## Build & test expectations
+## Build and test expectations
 - Prefer `make <target>` over ad-hoc commands.
 - Required targets: `make lint`, `make test`, `make contract-validate`, `make e2e-tier1`.
-- Keep tests deterministic; avoid requiring external proprietary services.
+- Keep tests deterministic; avoid requiring proprietary services.
 
 ## Service boundary rules
-- Services do NOT share DB tables directly for integration.
-- Integration is via message bus topics + public APIs.
+- Services do not share DB tables directly for integration.
+- Integration is via message bus topics and public APIs.
 - At-least-once delivery: consumers must be idempotent (dedupe by stable IDs).
 
 ## Coding conventions
