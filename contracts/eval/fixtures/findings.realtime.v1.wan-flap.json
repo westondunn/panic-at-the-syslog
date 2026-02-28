@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "finding_id": "find-wan-001",
+  "correlation_id": "corr-wan-001",
+  "detected_at": "2026-01-15T10:05:00Z",
+  "category": "wan-instability",
+  "confidence": 0.75,
+  "severity": "high",
+  "evidence": [
+    {
+      "event_id": "evt-201",
+      "source_device": "router-a",
+      "summary": "WAN link down detected"
+    },
+    {
+      "event_id": "evt-202",
+      "source_device": "router-a",
+      "summary": "WAN link up detected"
+    }
+  ],
+  "details": {
+    "flap_count": 6,
+    "interface": "eth0"
+  }
+}

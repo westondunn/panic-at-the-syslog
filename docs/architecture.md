@@ -30,7 +30,12 @@ The platform is designed to run on anything from a single Docker host to full Ku
 ### Detector
 - Consumes `events.normalized.v1`.
 - Applies deterministic rules and heuristics:
-  - brute-force patterns, repeated denies, WAN flaps, DHCP churn, DNS anomalies, etc.
+  - **Brute-force / auth failures**: groups auth-labelled events with warn/error severity by device; threshold ≥ 5.
+  - **WAN flaps / link instability**: groups wan/link-labelled events with up/down summaries by device; threshold ≥ 3.
+  - **Firewall deny flood**: groups firewall-labelled events with warn/error severity by device; threshold ≥ 10.
+  - **DHCP churn**: groups dhcp-labelled events by device; threshold ≥ 5.
+- Findings include severity (derived from confidence) and evidence pointers (event_id, source_device, summary) for traceability.
+- Finding IDs are deterministic (SHA-256 of category + device + sorted event IDs) to guarantee idempotent consumer behavior.
 - Emits `findings.realtime.v1`.
 
 ### Analyzer
