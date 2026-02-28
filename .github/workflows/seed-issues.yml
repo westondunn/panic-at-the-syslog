@@ -55,8 +55,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Build a milestone title->number map
-          gh api "repos/$REPO/milestones?state=all&per_page=100" > /tmp/milestones.json
+          # Build a milestone title->number map (paginate to handle >100)
+          gh api "repos/$REPO/milestones?state=all" --paginate > /tmp/milestones.json
 
           issues_count=$(yq '.issues | length' "$SEED")
           for i in $(seq 0 $((issues_count-1))); do
@@ -72,29 +72,37 @@ jobs:
             import json, sys
             ms = json.load(open("/tmp/milestones.json"))
             mt = sys.argv[1]
-            for m in ms:
-                if m["title"]==mt:
-                    print(m["number"])
-                    break
-            else:
-                print("")  # Prints empty string if not found
+            if mt and mt != "null":
+              for m in ms:
+                  if m["title"]==mt:
+                      print(m["number"])
+                      sys.exit(0)
+            # Milestone not found or null; print empty
+            print("")
             PY
             )
 
             # Skip if issue with exact title exists
-            existing=$(gh issue list -R "$REPO" --search "\"$title\" in:title" --json title,number --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
+            existing=$(gh api "repos/$REPO/issues" --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
             if [ -n "${existing:-}" ]; then
               echo "Issue exists: \"$title\" (#$existing) — skipping"
               continue
             fi
 
             echo "Creating issue: \"$title\""
-            # Create issue
-            number=$(gh api -X POST "repos/$REPO/issues" \
-              -f title="$title" \
-              -f body="$body" \
-              -F milestone=$milestone_number \
-              --jq '.number')
+            # Create issue (only include milestone if found)
+            if [ -n "$milestone_number" ]; then
+              number=$(gh api -X POST "repos/$REPO/issues" \
+                -f title="$title" \
+                -f body="$body" \
+                -F milestone=$milestone_number \
+                --jq '.number')
+            else
+              number=$(gh api -X POST "repos/$REPO/issues" \
+                -f title="$title" \
+                -f body="$body" \
+                --jq '.number')
+            fi
 
             # Apply labels (separate call; robust)
             echo "{\"labels\": $labels_json}" > /tmp/labels.json
