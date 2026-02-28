@@ -4,7 +4,6 @@ title = "Panic! At The Syslog - gitleaks config"
 description = "Allowlist placeholders and documentation examples"
 paths = [
   '''docs/''',
-  '''.github/''',
   '''.codex/'''
 ]
 
