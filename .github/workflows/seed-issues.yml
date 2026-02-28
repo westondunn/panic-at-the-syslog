@@ -39,9 +39,11 @@ jobs:
 
             # Check if milestone exists
             exists=$(gh api "repos/$REPO/milestones?state=all&per_page=100" --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
-            if [ -z "$milestone_number" ]; then
-              echo "Milestone \"$milestone_title\" not found for issue \"$title\". Skipping."
-              continue
+            if [ -z "$exists" ]; then
+              echo "Creating milestone: $title"
+              gh api -X POST "repos/$REPO/milestones" -f title="$title" -f description="$desc" >/dev/null
+            else
+              echo "Milestone \"$title\" already exists. Skipping."
             fi
               echo "Creating milestone: $title"
               gh api -X POST "repos/$REPO/milestones" -f title="$title" -f description="$desc" >/dev/null
