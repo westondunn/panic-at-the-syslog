@@ -2,8 +2,12 @@ name: Contract validation
 
 on:
   pull_request:
+    paths:
+      - "contracts/**"
   push:
     branches: [main]
+    paths:
+      - "contracts/**"
 
 jobs:
   validate:
