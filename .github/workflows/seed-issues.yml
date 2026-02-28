@@ -67,19 +67,12 @@ jobs:
             # labels as JSON array
             labels_json=$(yq -o=json ".issues[$i].labels" "$SEED")
 
-            milestone_number=$(python - "$milestone_title" <<'PY'
-import json, sys
-ms = json.load(open("/tmp/milestones.json"))
-mt = sys.argv[1]
-if mt and mt != "null":
-  for m in ms:
-      if m["title"]==mt:
-          print(m["number"])
-          sys.exit(0)
-# Milestone not found or null; print empty
-print("")
-PY
-)
+            # Look up milestone number from title using jq
+            if [ -n "$milestone_title" ] && [ "$milestone_title" != "null" ]; then
+              milestone_number=$(jq -r --arg mt "$milestone_title" '.[] | select(.title == $mt) | .number' /tmp/milestones.json | head -n 1)
+            else
+              milestone_number=""
+            fi
 
             # Skip if issue with exact title exists
             existing=$(gh api "repos/$REPO/issues" --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
