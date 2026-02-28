@@ -4,7 +4,13 @@ import time
 
 
 class TokenBucketRateLimiter:
-    """Stdlib-only token-bucket rate limiter using ``time.monotonic``."""
+    """Stdlib-only token-bucket rate limiter using ``time.monotonic``.
+
+    .. note::
+        This class is **not** thread-safe.  Callers that share a single
+        instance across threads must synchronise access externally
+        (e.g. with :class:`threading.Lock`).
+    """
 
     def __init__(self, rate: float, burst: int) -> None:
         self._rate = rate

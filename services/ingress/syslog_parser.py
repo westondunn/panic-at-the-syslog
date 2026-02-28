@@ -49,10 +49,11 @@ _MAX_PRI = 191
 #   <PRI>Mon DD HH:MM:SS hostname program[PID]: message
 _PRI_RE = re.compile(r"^<(\d{1,3})>(.*)$", re.DOTALL)
 _HEADER_RE = re.compile(
-    r"^([A-Z][a-z]{2})\s+(\d{1,2})\s+(\d{2}:\d{2}:\d{2})\s+"
-    r"(\S+)\s+"
-    r"([^\[:\s]+)"
-    r"(?:\[(\d+)\])?:\s*(.*)$",
+    r"^(?P<month>[A-Z][a-z]{2})\s+(?P<day>\d{1,2})\s+"
+    r"(?P<time>\d{2}:\d{2}:\d{2})\s+"
+    r"(?P<hostname>\S+)\s+"
+    r"(?P<program>[^\[:\s]+)"
+    r"(?:\[(?P<pid>\d+)\])?:\s*(?P<message>.*)$",
     re.DOTALL,
 )
 
@@ -100,9 +101,9 @@ def parse_syslog_line(
     }
 
     if header_match is not None:
-        attributes["hostname"] = header_match.group(4)
-        attributes["program"] = header_match.group(5)
-        pid = header_match.group(6)
+        attributes["hostname"] = header_match.group("hostname")
+        attributes["program"] = header_match.group("program")
+        pid = header_match.group("pid")
         if pid is not None:
             attributes["pid"] = int(pid)
 
