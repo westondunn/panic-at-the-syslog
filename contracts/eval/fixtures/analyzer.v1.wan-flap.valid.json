@@ -1,0 +1,10 @@
+{
+  "summary": "WAN link on router-a interface eth0 is flapping repeatedly, indicating upstream instability.",
+  "risk_level": "high",
+  "recommended_actions": [
+    "Contact the upstream ISP to investigate link instability.",
+    "Enable WAN failover if a secondary link is available.",
+    "Monitor the interface for further flap events."
+  ],
+  "notes": "6 flap events detected within the observation window."
+}

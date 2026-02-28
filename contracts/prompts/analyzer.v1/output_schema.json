@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://panic-at-the-syslog/contracts/prompts/analyzer.v1/output_schema.json",
+  "title": "analyzer.prompt.output.v1",
+  "type": "object",
+  "required": ["summary", "risk_level", "recommended_actions"],
+  "properties": {
+    "summary": { "type": "string", "minLength": 1 },
+    "risk_level": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "recommended_actions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}
