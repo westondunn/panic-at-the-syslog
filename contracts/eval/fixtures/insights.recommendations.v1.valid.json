@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "insight_id": "ins-1f5f790ed749de2e",
+  "finding_id": "find-001",
+  "correlation_id": "corr-001",
+  "analyzed_at": "2026-01-15T10:01:00Z",
+  "summary": "Repeated authentication failures indicate a probable brute-force attempt.",
+  "recommendation": "Block the source IP at the edge and require MFA for targeted accounts.",
+  "rationale": "The finding includes 14 attempts from a single source in a short interval.",
+  "priority": "high",
+  "confidence": 0.82,
+  "details": {
+    "source_ip": "192.0.2.10",
+    "attempts": 14,
+    "category": "brute-force-suspected"
+  }
+}
