@@ -16,3 +16,9 @@ data:
   OLLAMA_MODEL: {{ .Values.llm.ollama.model | quote }}
   OTEL_ENABLED: {{ .Values.observability.otel.enabled | quote }}
   OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.observability.otel.endpoint | quote }}
+  INGRESS_MAX_LINE_LENGTH: {{ .Values.ingress.maxLineLength | quote }}
+  INGRESS_RATE_LIMIT_PER_SEC: {{ .Values.ingress.rateLimitPerSec | quote }}
+  INGRESS_RATE_LIMIT_BURST: {{ .Values.ingress.rateLimitBurst | quote }}
+  INGRESS_SPOOL_ENABLED: {{ .Values.ingress.spool.enabled | quote }}
+  INGRESS_SPOOL_DIR: {{ .Values.ingress.spool.dir | quote }}
+  INGRESS_SPOOL_TTL_SECONDS: {{ .Values.ingress.spool.ttlSeconds | quote }}
