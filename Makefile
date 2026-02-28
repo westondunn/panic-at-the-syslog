@@ -13,4 +13,4 @@ contract-validate:
 	python -m tools.contract_validate
 
 e2e-tier1:
-	pytest -q -m e2e tests/e2e/test_tier1_smoke.py
+	PYTHONPATH=$(pwd) pytest -q -m e2e tests/e2e/test_tier1_smoke.py
