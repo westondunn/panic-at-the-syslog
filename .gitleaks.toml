@@ -1,14 +1,18 @@
 title = "Panic! At The Syslog - gitleaks config"
 
 [allowlist]
-description = "Allowlist placeholders and documentation examples"
+description = "Allowlist placeholders, documentation examples, and contact templates"
 paths = [
   '''docs/''',
-  '''.codex/'''
+  '''.codex/''',
+  '''CODE_OF_CONDUCT\.md''',
+  '''SECURITY\.md''',
+  '''.github/SECURITY\.md'''
 ]
 
 regexes = [
   '''REPLACE-ME''',
   '''example\.com''',
+  '''local\.dev''',
   '''http://www\.apache\.org/licenses/LICENSE-2\.0'''
 ]
