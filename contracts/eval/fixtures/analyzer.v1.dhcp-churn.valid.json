@@ -1,0 +1,10 @@
+{
+  "summary": "Excessive DHCP lease churn detected for MAC 00:11:22:33:44:55, possibly indicating a misconfigured or rogue device.",
+  "risk_level": "medium",
+  "recommended_actions": [
+    "Identify the device associated with MAC 00:11:22:33:44:55.",
+    "Check for DHCP server configuration issues or IP conflicts.",
+    "Consider assigning a static lease for the affected device."
+  ],
+  "notes": "8 lease cycles observed in a short period."
+}

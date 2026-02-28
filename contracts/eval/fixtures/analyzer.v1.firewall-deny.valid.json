@@ -1,0 +1,9 @@
+{
+  "summary": "Elevated firewall deny rate from 192.0.2.50 targeting port 22, suggesting a scan or unauthorized access attempt.",
+  "risk_level": "medium",
+  "recommended_actions": [
+    "Add 192.0.2.50 to the blocklist if not a known source.",
+    "Verify that SSH access policies are correctly scoped.",
+    "Review recent connection logs for successful intrusions."
+  ]
+}
