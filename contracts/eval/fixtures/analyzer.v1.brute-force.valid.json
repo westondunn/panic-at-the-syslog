@@ -1,0 +1,10 @@
+{
+  "summary": "Repeated authentication failures from 192.0.2.10 indicate a probable brute-force attempt targeting the admin account.",
+  "risk_level": "high",
+  "recommended_actions": [
+    "Block source IP 192.0.2.10 at the edge firewall.",
+    "Enforce MFA on the targeted admin account.",
+    "Review authentication logs for lateral movement attempts."
+  ],
+  "notes": "14 failed attempts observed in a short interval from a single source."
+}
