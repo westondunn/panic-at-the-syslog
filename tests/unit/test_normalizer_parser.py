@@ -224,7 +224,7 @@ def test_normalized_event_is_frozen() -> None:
     result = parse(_raw("eth0 link up"))
     try:
         result.severity = "debug"  # type: ignore[misc]
-        raise AssertionError("Expected FrozenInstanceError")
+        raise AssertionError("Expected AttributeError from frozen dataclass")
     except AttributeError:
         pass
 

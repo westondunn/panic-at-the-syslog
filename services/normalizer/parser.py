@@ -92,8 +92,9 @@ def parse(raw: dict[str, Any]) -> NormalizedEvent:
     if m:
         action = m.group("action")
         severity = "warn" if action == "DROP" else "info"
-        proto = m.group("proto") or ""
-        summary = f"Firewall {action} {proto} {m.group('src')} -> {m.group('dst')}"
+        proto = m.group("proto")
+        proto_part = f"{proto} " if proto else ""
+        summary = f"Firewall {action} {proto_part}{m.group('src')} -> {m.group('dst')}"
         labels = ["firewall", "synology"]
         return _build(event_id, correlation_id, normalized_at, source, severity, summary, labels)
 
