@@ -107,3 +107,4 @@ PY
             echo "{\"labels\": $labels_json}" > /tmp/labels.json
             gh api -X POST "repos/$REPO/issues/$number/labels" --input /tmp/labels.json >/dev/null
           done
+
