@@ -7,7 +7,7 @@ lint:
 	ruff check .
 
 test:
-	pytest
+	PYTHONPATH=$(CURDIR) pytest
 
 contract-validate:
 	python -m tools.contract_validate
