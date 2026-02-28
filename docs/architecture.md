@@ -15,9 +15,11 @@ The platform is designed to run on anything from a single Docker host to full Ku
 **Ingress → Normalize → Detect → Analyze → API → UI**
 
 ### Ingress
-- Receives syslog via syslog-ng/rsyslog or a direct receiver.
+- Receives syslog via a direct Python asyncio UDP/TCP receiver (Tier 1) or syslog-ng/rsyslog (Tier 2).
+- Parses RFC 3164 syslog headers (PRI, facility, severity, hostname, program).
+- Enforces rate limiting and maximum line length.
 - Emits `raw.syslog.v1` messages to the bus.
-- Optionally spools raw lines to disk for short-term review and reprocessing.
+- Optionally spools raw events to disk with configurable TTL for reprocessing.
 
 ### Normalizer
 - Consumes `raw.syslog.v1`.

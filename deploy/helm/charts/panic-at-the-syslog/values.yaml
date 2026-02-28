@@ -72,3 +72,12 @@ replicaCount:
   normalizer: 1
   detector: 1
   analyzer: 1
+
+ingress:
+  maxLineLength: 8192
+  rateLimitPerSec: 5000
+  rateLimitBurst: 10000
+  spool:
+    enabled: false
+    dir: "/var/spool/panic-ingress"
+    ttlSeconds: 86400

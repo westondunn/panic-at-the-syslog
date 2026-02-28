@@ -14,6 +14,7 @@
 | LLM | Ollama adapter stub | MIT ecosystem | yes |
 | Scheduler | Inline scheduler | Project code (MIT) | yes |
 | Search | In-memory search stub | Project code (MIT) | yes |
+| Ingress | Direct asyncio receiver | Project code (MIT) | yes |
 
 ## Tier 2 (optional, OSI-only)
 | Category | Adapter | License class | Default |

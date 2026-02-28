@@ -35,3 +35,11 @@ spec:
               name: syslog-tls
           resources:
             {{- toYaml .Values.resources.default | nindent 12 }}
+          {{- if .Values.ingress.spool.enabled }}
+          volumeMounts:
+            - name: spool
+              mountPath: {{ .Values.ingress.spool.dir }}
+      volumes:
+        - name: spool
+          emptyDir: {}
+          {{- end }}
