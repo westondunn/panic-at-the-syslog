@@ -1,0 +1,9 @@
+{
+  "name": "panic-ui",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "lint": "echo \"ui lint: bootstrap ok\"",
+    "build": "echo \"ui build: bootstrap ok\""
+  }
+}

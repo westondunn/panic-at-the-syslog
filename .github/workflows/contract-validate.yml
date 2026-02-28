@@ -2,13 +2,8 @@ name: Contract validation
 
 on:
   pull_request:
-    paths:
-      - "contracts/**"
-      - ".github/workflows/contract-validate.yml"
   push:
     branches: [main]
-    paths:
-      - "contracts/**"
 
 jobs:
   validate:
