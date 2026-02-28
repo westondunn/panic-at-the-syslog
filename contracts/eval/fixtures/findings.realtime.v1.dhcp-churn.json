@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "finding_id": "find-dhcp-001",
+  "correlation_id": "corr-dhcp-001",
+  "detected_at": "2026-01-15T10:15:00Z",
+  "category": "dhcp-churn",
+  "confidence": 0.65,
+  "severity": "medium",
+  "evidence": [
+    {
+      "event_id": "evt-401",
+      "source_device": "router-a",
+      "summary": "DHCP lease assigned to 00:11:22:33:44:55"
+    },
+    {
+      "event_id": "evt-402",
+      "source_device": "router-a",
+      "summary": "DHCP lease released by 00:11:22:33:44:55"
+    }
+  ],
+  "details": {
+    "mac_address": "00:11:22:33:44:55",
+    "churn_count": 8
+  }
+}

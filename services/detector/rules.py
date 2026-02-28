@@ -19,8 +19,9 @@ def _severity_from_confidence(confidence: float) -> str:
 
 
 def _build_finding_id(category: str, key: str, event_ids: list[str]) -> str:
+    stable_ids = ":".join(sorted(event_ids))
     digest = sha256(
-        f"{category}:{key}:{sorted(event_ids)}".encode("utf-8")
+        f"{category}:{key}:{stable_ids}".encode("utf-8")
     ).hexdigest()[:16]
     return f"find-{digest}"
 

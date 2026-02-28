@@ -37,7 +37,10 @@ class DetectorService:
                 self.logger.info(
                     "finding detected: %s",
                     finding.category,
-                    extra={"correlation_id": finding.correlation_id},
+                    extra={
+                        "correlation_id": finding.correlation_id,
+                        "finding_id": finding.finding_id,
+                    },
                 )
                 if self.bus is not None:
                     self.bus.publish("findings.realtime.v1", finding_event)
