@@ -8,6 +8,8 @@ Local-first LLM analysis via Ollama, with governed optional external provider pl
 ## Status
 Scaffold phase. Contracts-first, adapter-first.
 
+Detector service implements baseline detections (brute-force, WAN flaps, firewall denies, DHCP churn) with severity, evidence pointers, and idempotent finding IDs.
+
 ## Key principles
 - OSI-only core distribution
 - Contracts-first boundaries (`/contracts/**`)

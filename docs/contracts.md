@@ -54,11 +54,17 @@ Real-time findings produced by the detector (pattern matches, heuristics).
 **Required fields:**
 
 - `schema_version`: `"1.0"`
-- `finding_id`: unique identifier
+- `finding_id`: unique identifier (deterministic for idempotency)
 - `correlation_id`: inherited from event stream
 - `detected_at`: ISO 8601 timestamp
-- `category`: string (e.g., `"brute-force-suspected"`, `"wan-instability"`)
+- `category`: string (e.g., `"brute-force-suspected"`, `"wan-instability"`, `"firewall-deny-flood"`, `"dhcp-churn"`)
 - `confidence`: number in range [0, 1]
+
+**Optional fields:**
+
+- `severity`: one of `"low"`, `"medium"`, `"high"`, `"critical"` (derived from confidence)
+- `evidence`: array of objects with `event_id`, `source_device`, `summary` (pointers to contributing events)
+- `details`: object with additional context (e.g., `attempts`, `flap_count`)
 
 ### insights.recommendations.v1
 
