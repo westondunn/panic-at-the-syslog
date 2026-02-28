@@ -68,15 +68,15 @@ jobs:
             labels_json=$(yq -o=json ".issues[$i].labels" "$SEED")
 
             milestone_number=$(python - <<'PY'
-import json,sys
-ms=json.load(open("/tmp/milestones.json"))
-mt=sys.argv[1]
-for m in ms:
-    if m["title"]==mt:
-        print(m["number"])
-        break
-PY
-"$milestone_title")
+            import json,sys
+            ms=json.load(open("/tmp/milestones.json"))
+            mt=sys.argv[1]
+            for m in ms:
+                if m["title"]==mt:
+                    print(m["number"])
+                    break
+            PY
+            "$milestone_title")
 
             # Skip if issue with exact title exists
             existing=$(gh issue list -R "$REPO" --search "\"$title\" in:title" --json title,number --jq ".[] | select(.title==\"$title\") | .number" | head -n 1 || true)
