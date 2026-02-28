@@ -6,5 +6,6 @@
     "Enforce MFA on the targeted admin account.",
     "Review authentication logs for lateral movement attempts."
   ],
+  "confidence": 0.92,
   "notes": "14 failed attempts observed in a short interval from a single source."
 }

@@ -6,5 +6,6 @@
     "Check for DHCP server configuration issues or IP conflicts.",
     "Consider assigning a static lease for the affected device."
   ],
+  "confidence": 0.75,
   "notes": "8 lease cycles observed in a short period."
 }

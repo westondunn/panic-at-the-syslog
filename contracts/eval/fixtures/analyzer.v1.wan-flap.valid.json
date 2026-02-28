@@ -6,5 +6,6 @@
     "Enable WAN failover if a secondary link is available.",
     "Monitor the interface for further flap events."
   ],
+  "confidence": 0.88,
   "notes": "6 flap events detected within the observation window."
 }
