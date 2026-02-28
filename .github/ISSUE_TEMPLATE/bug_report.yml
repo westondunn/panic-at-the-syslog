@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a defect in Sysloglock Holmes
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps or sample fixtures (no real sensitive logs)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version/Commit
+      placeholder: "v0.x or commit hash"
+  - type: dropdown
+    id: deploy
+    attributes:
+      label: Deployment mode
+      options:
+        - Docker Compose
+        - Kubernetes (Helm)
+        - Other
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Please redact secrets and private IPs if needed.

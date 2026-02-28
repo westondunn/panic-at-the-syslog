@@ -1,0 +1,95 @@
+# Panic! At The Syslog — root .gitignore
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+**/*secret*
+**/*_secret*
+**/*-secret*
+**/*credentials*
+**/*token*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+dist/
+build/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+pytest.xml
+.pyre/
+.pytype/
+.marshal_cache/
+
+# Virtualenvs
+.venv/
+venv/
+ENV/
+env/
+
+# Node / Next.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.next/
+out/
+dist/
+.turbo/
+.eslintcache
+
+# Logs / runtime
+*.log
+logs/
+tmp/
+.cache/
+*.pid
+
+# Docker / compose
+*.local
+docker-compose.override.yml
+#**/.dockerignore
+
+# Helm / Kubernetes
+**/charts/**/charts/
+**/charts/**/Chart.lock
+**/charts/**/tmp/
+*.tgz
+
+# OSI policy: ignore locally downloaded model weights or artifacts
+models/
+ollama_models/
+
+# Editor (allow shared workspace config)
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/README.md

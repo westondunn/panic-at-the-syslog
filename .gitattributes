@@ -1,0 +1,22 @@
+# Panic! At The Syslog — git attributes
+
+# Normalize line endings
+* text=auto eol=lf
+
+# Treat these as binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.ico binary
+
+# Shell scripts
+*.sh text eol=lf
+
+# Windows scripts
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Lock files should be LF
+package-lock.json text eol=lf

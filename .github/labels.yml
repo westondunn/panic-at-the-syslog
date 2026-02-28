@@ -1,0 +1,16 @@
+- name: bug
+  color: d73a4a
+- name: enhancement
+  color: a2eeef
+- name: security
+  color: b60205
+- name: contracts
+  color: 5319e7
+- name: governance
+  color: 0e8a16
+- name: dependencies
+  color: 0366d6
+- name: question
+  color: d876e3
+- name: chore
+  color: cfd3d7

@@ -1,0 +1,17 @@
+name-template: "Panic! At The Syslog v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+
+categories:
+  - title: "🚨 Security"
+    labels: ["security"]
+  - title: "✨ Features"
+    labels: ["enhancement", "feature"]
+  - title: "🐛 Fixes"
+    labels: ["bug"]
+  - title: "🧰 Maintenance"
+    labels: ["chore", "dependencies"]
+
+change-template: "- $TITLE (#$NUMBER) @$AUTHOR"
+template: |
+  ## Changes
+  $CHANGES

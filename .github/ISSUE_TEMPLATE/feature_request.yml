@@ -1,0 +1,23 @@
+name: Feature request
+description: Propose an enhancement
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should we build, and why?
+    validations:
+      required: true
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Support tier target
+      options:
+        - Tier 1 (CI/e2e)
+        - Tier 2 (integration)
+        - Tier 3 (community)
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

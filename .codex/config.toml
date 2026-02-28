@@ -1,0 +1,23 @@
+# Project-scoped Codex configuration.
+# Loaded when the project is trusted by Codex CLI.
+# See: https://developers.openai.com/codex/config-reference/
+
+# Prefer safe, reviewable behavior.
+approval_policy = "review"          # require approvals for risky actions
+sandbox_mode = "workspace"          # keep work inside repo by default
+
+# Optional: prevent edits to protected areas unless explicitly approved.
+# sandbox_workspace_write.protected_paths = [
+#   ".github/",
+#   ".codex/",
+#   "contracts/",
+#   "docs/governance/",
+# ]
+
+# Encourage predictable tooling.
+[commands]
+lint = "make lint"
+test = "make test"
+contract_validate = "make contract-validate"
+
+# If using multi-root markers in the future, set project_root_markers globally in ~/.codex/config.toml

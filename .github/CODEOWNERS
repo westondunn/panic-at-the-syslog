@@ -1,0 +1,14 @@
+# Default owners
+* @westondunn
+
+# High-governance areas
+/contracts/ @maintainers @architecture-review
+/docs/governance/ @maintainers @security-review
+/deploy/helm/ @maintainers @platform-review
+/.github/ @maintainers
+
+# UI ownership (optional)
+services/ui/ @maintainers @frontend-review
+
+# Adapter boundaries
+/libs/adapters/ @maintainers @architecture-review
