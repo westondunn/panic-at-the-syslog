@@ -67,10 +67,11 @@ jobs:
             # labels as JSON array
             labels_json=$(yq -o=json ".issues[$i].labels" "$SEED")
 
-                        milestone_number=$(python - "$milestone_title" <<'PY'
-            import json,sys
-            ms=json.load(open("/tmp/milestones.json"))
-            mt=sys.argv[1]
+            milestone_number=$(
+            python - "$milestone_title" <<'PY'
+            import json, sys
+            ms = json.load(open("/tmp/milestones.json"))
+            mt = sys.argv[1]
             for m in ms:
                 if m["title"]==mt:
                     print(m["number"])
