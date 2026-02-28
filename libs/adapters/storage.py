@@ -8,6 +8,8 @@ class StorageAdapter(Protocol):
 
     def get(self, collection: str, item_id: str) -> dict[str, Any] | None: ...
 
+    def list(self, collection: str) -> list[dict[str, Any]]: ...
+
 
 class InMemoryStorage:
     def __init__(self) -> None:
@@ -19,3 +21,6 @@ class InMemoryStorage:
     def get(self, collection: str, item_id: str) -> dict[str, Any] | None:
         item = self._data.get(collection, {}).get(item_id)
         return dict(item) if item is not None else None
+
+    def list(self, collection: str) -> list[dict[str, Any]]:
+        return [dict(v) for v in self._data.get(collection, {}).values()]
