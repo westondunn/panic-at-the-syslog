@@ -1,0 +1,12 @@
+{
+  "summary": "Repeated authentication failures from single source IP suggest brute-force attempt.",
+  "risk_level": "high",
+  "recommended_actions": [
+    "Block source IP at the network edge",
+    "Enable MFA for targeted accounts"
+  ],
+  "confidence": 0.85,
+  "evidence": [
+    "14 failed login attempts in 60s window from 192.0.2.10"
+  ]
+}
