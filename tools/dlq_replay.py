@@ -39,7 +39,7 @@ def replay(
 
     replayed: list[dict[str, Any]] = []
     for msg in messages:
-        dlq_id = msg.get("dlq_id", "<unknown>")
+        dlq_id = msg.get("dlq_id", "missing-dlq-id")
         original = msg.get("original_event")
         if original is None:
             logger.warning(

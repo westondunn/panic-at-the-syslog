@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from libs.adapters.bus.interface import MessageBus
+from libs.common.errors import ValidationError
 from libs.common.logging import get_logger
 
 from .rules import (
@@ -67,10 +68,14 @@ class DetectorService:
         rule_name: str,
         exc: Exception,
     ) -> None:
-        correlation_id = events[0].get("correlation_id", "") if events else ""
+        correlation_id = events[0].get("correlation_id", "unknown") if events else "unknown"
         event_ids = [e.get("event_id", "") for e in events]
         error_msg = f"error in rule {rule_name}: {exc}"
-        error_type = "validation" if "ValidationError" in type(exc).__name__ else "rule_error"
+        error_type = (
+            "validation"
+            if isinstance(exc, ValidationError)
+            else "rule_error"
+        )
         dlq_event: dict[str, Any] = {
             "schema_version": "1.0",
             "dlq_id": _build_dlq_id(error_msg, event_ids),
