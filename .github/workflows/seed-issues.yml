@@ -45,9 +45,6 @@ jobs:
             else
               echo "Milestone \"$title\" already exists. Skipping."
             fi
-              echo "Creating milestone: $title"
-              gh api -X POST "repos/$REPO/milestones" -f title="$title" -f description="$desc" >/dev/null
-            fi
           done
 
       - name: Create issues (idempotent)
