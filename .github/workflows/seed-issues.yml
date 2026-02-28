@@ -68,14 +68,14 @@ jobs:
             labels_json=$(yq -o=json ".issues[$i].labels" "$SEED")
 
             milestone_number=$(python - <<'PY'
-            import json,sys
-            ms=json.load(open("/tmp/milestones.json"))
-            mt=sys.argv[1]
-            for m in ms:
-                if m["title"]==mt:
-                    print(m["number"])
-                    break
-            PY
+          import json,sys
+          ms=json.load(open("/tmp/milestones.json"))
+          mt=sys.argv[1]
+          for m in ms:
+              if m["title"]==mt:
+                  print(m["number"])
+                  break
+          PY
             "$milestone_title")
 
             # Skip if issue with exact title exists
@@ -90,10 +90,10 @@ jobs:
             number=$(gh api -X POST "repos/$REPO/issues" \
               -f title="$title" \
               -f body="$body" \
-              -f milestone="$milestone_number" \
+              -F milestone=$milestone_number \
               --jq '.number')
 
             # Apply labels (separate call; robust)
-            echo "$labels_json" > /tmp/labels.json
+            echo "{\"labels\": $labels_json}" > /tmp/labels.json
             gh api -X POST "repos/$REPO/issues/$number/labels" --input /tmp/labels.json >/dev/null
           done
