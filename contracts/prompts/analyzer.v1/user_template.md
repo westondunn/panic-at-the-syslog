@@ -1,13 +1,14 @@
-# Analyzer User Template (v1)
+Analyze this security finding:
 
-Analyze the following security finding and return a JSON object matching the
-output schema.
+Category: {{category}}
+Confidence: {{confidence}}
+Details: {{details_json}}
 
-## Finding
+Respond with a single JSON object containing:
+- summary: one-line description of the finding
+- risk_level: one of "low", "medium", "high", "critical"
+- recommended_actions: array of actionable steps
+- confidence: number between 0 and 1
+- evidence: array of evidence strings supporting the analysis
 
-```json
-{{finding}}
-```
-
-Respond with a JSON object containing: `summary`, `risk_level`,
-`recommended_actions`, and optionally `notes`.
+JSON only. No other text.

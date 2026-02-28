@@ -1,7 +1,7 @@
 PROJECT_NAME := Panic! At The Syslog
 PROJECT_SLUG := panic-at-the-syslog
 
-.PHONY: lint test contract-validate e2e-tier1
+.PHONY: lint test contract-validate e2e-tier1 prompt-eval
 
 lint:
 	ruff check .
@@ -14,3 +14,6 @@ contract-validate:
 
 e2e-tier1:
 	PYTHONPATH=$(CURDIR) pytest -q -m e2e tests/e2e/test_tier1_smoke.py
+
+prompt-eval:
+	PYTHONPATH=$(CURDIR) pytest -q tests/unit/test_prompt_versioning.py

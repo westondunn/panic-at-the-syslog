@@ -3,13 +3,19 @@
   "$id": "https://panic-at-the-syslog/contracts/prompts/analysis-output.schema.json",
   "title": "analyzer.prompt.output.v1",
   "type": "object",
-  "required": ["summary", "risk_level", "recommended_actions"],
+  "required": ["summary", "risk_level", "recommended_actions", "confidence"],
   "properties": {
     "summary": {"type": "string", "minLength": 1},
     "risk_level": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
     "recommended_actions": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1}
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1
+    },
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "evidence": {
+      "type": "array",
+      "items": {"type": "string"}
     },
     "notes": {"type": "string"}
   },
