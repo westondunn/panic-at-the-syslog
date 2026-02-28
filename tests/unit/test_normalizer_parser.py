@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+import pytest
 
 from services.normalizer.parser import (
     DeviceHint,
@@ -222,11 +223,8 @@ def test_extract_device_hint_no_match() -> None:
 
 def test_normalized_event_is_frozen() -> None:
     result = parse(_raw("eth0 link up"))
-    try:
+    with pytest.raises(AttributeError):
         result.severity = "debug"  # type: ignore[misc]
-        raise AssertionError("Expected AttributeError from frozen dataclass")
-    except AttributeError:
-        pass
 
 
 def test_to_event_matches_schema_fields() -> None:
