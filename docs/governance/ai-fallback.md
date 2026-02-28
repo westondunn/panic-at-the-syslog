@@ -55,7 +55,7 @@ Tier 1 / Tier 2 deploy profiles.
 |------|---------|-------------|
 | **Redaction** | Enabled | Replaces IPs, MACs, and FQDNs with stable tokens before sending prompts externally. |
 | **Audit log** | Always on | Records timestamp, correlation_id, prompt version, redaction mode, response hash, model id, and token usage. |
-| **Budget** | 100 000 tokens/day, 2 000 000 tokens/month | Refuses calls when limits are exhausted; reset via `reset_daily()` / `reset_monthly()`. |
+| **Budget** | 100,000 tokens/day, 2,000,000 tokens/month | Refuses calls when limits are exhausted; reset via `reset_daily()` / `reset_monthly()`. |
 | **Circuit breaker** | 5 consecutive failures, 60 s recovery | Trips to open state on repeated failures; half-opens after recovery timeout. |
 
 ## Operational guidance

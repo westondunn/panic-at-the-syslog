@@ -62,7 +62,7 @@ class AuditLog:
 
 @dataclass
 class BudgetPolicy:
-    """Token/cost budget enforced per calendar day."""
+    """Token/cost budget enforced per calendar day and month."""
 
     daily_token_limit: int = 100_000
     monthly_token_limit: int = 2_000_000

@@ -43,6 +43,8 @@ class ExternalLlmProvider:
             )
 
         gate = self.policy.pre_request(prompt, estimated_tokens=len(prompt.split()))
+        # NOTE: word-count estimate; concrete implementations should use a
+        # proper tokenizer (e.g. tiktoken) for accurate budget tracking.
         if not gate["allowed"]:
             raise RuntimeError(
                 f"External LLM call blocked by policy: {gate['reason']}"
