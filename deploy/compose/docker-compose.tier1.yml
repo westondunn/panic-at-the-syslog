@@ -1,139 +1,44 @@
-name: panic-at-the-syslog
+version: "3.9"
+
 services:
   kafka:
-    image: apache/kafka:3.9.0
+    image: bitnami/kafka:3.7
     environment:
-      - KAFKA_NODE_ID=1
-      - KAFKA_PROCESS_ROLES=broker,controller
-      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
-      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - CLUSTER_ID=panic-local-dev-cluster-01
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     ports:
       - "9092:9092"
-    volumes:
-      - kafka-data:/tmp/kraft-combined-logs
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 || exit 1",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
 
   postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       - POSTGRES_DB=panic
       - POSTGRES_USER=panic
       - POSTGRES_PASSWORD=panic
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U panic"]
+      test: ["CMD-SHELL", "pg_isready -U panic -d panic"]
       interval: 10s
       timeout: 5s
-      retries: 5
-
-  ollama:
-    image: ollama/ollama:latest
-    volumes:
-      - ollama-models:/root/.ollama
-    ports:
-      - "11434:11434"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      retries: 10
       start_period: 10s
+    ports:
+      - "5432:5432"
 
   ingress:
-    build:
-      context: ../..
-      dockerfile: deploy/docker/ingress.Dockerfile
-    env_file:
-      - .env
-    ports:
-      - "1514:514/udp"
-      - "1514:514/tcp"
+    image: alpine:3.20
+    command: ["/bin/sh", "-c", "echo ingress placeholder && sleep infinity"]
     depends_on:
-      kafka:
-        condition: service_healthy
-    restart: unless-stopped
-
-  normalizer:
-    build:
-      context: ../..
-      dockerfile: deploy/docker/normalizer.Dockerfile
-    env_file:
-      - .env
-    depends_on:
-      kafka:
-        condition: service_healthy
-    restart: unless-stopped
-
-  detector:
-    build:
-      context: ../..
-      dockerfile: deploy/docker/detector.Dockerfile
-    env_file:
-      - .env
-    depends_on:
-      kafka:
-        condition: service_healthy
-    restart: unless-stopped
-
-  analyzer:
-    build:
-      context: ../..
-      dockerfile: deploy/docker/analyzer.Dockerfile
-    env_file:
-      - .env
-    depends_on:
-      kafka:
-        condition: service_healthy
-      ollama:
-        condition: service_healthy
-    restart: unless-stopped
+      - kafka
 
   api:
-    build:
-      context: ../..
-      dockerfile: deploy/docker/api.Dockerfile
-    env_file:
-      - .env
-    ports:
-      - "8000:8000"
+    image: alpine:3.20
+    command: ["/bin/sh", "-c", "echo api placeholder && sleep infinity"]
     depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    restart: unless-stopped
-
-  ui:
-    build:
-      context: ../..
-      dockerfile: deploy/docker/ui.Dockerfile
-    env_file:
-      - .env
-    ports:
-      - "3000:3000"
-    depends_on:
-      - api
-    restart: unless-stopped
-
-volumes:
-  kafka-data:
-  postgres-data:
-  ollama-models:
+      - postgres

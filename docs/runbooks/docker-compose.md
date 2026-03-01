@@ -1,8 +1,6 @@
-# Panic! At The Syslog — Docker Compose Runbook
+# Panic! At The Syslog - Docker Compose Runbook
 
 This runbook describes running the platform with Docker Compose profiles.
-
-> **New to the project?** Start with [quickstart.md](quickstart.md) for a step-by-step bootstrap guide.
 
 ## Profiles
 
@@ -16,14 +14,12 @@ This runbook describes running the platform with Docker Compose profiles.
 
 ## Typical flow
 
-1. Copy `.env.example` to `.env` and fill required values (see [quickstart.md](quickstart.md)).
+1. Copy `.env.example` to `.env` and fill required values.
 2. Start Tier 1:
-   ```bash
-   docker compose -f deploy/compose/docker-compose.tier1.yml up -d
-   ```
+   - `docker compose --profile tier1 up -d`
 3. Open UI and verify health endpoints:
-   - UI: http://localhost:3000
-   - API: http://localhost:8000/healthz (once implemented)
+   - `GET /healthz` on API
+   - Service readiness endpoints (if exposed internally)
 
 ## Operational notes
 

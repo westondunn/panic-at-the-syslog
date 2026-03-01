@@ -1,4 +1,16 @@
-import Link from "next/link";
+import {
+    Area,
+    AreaChart,
+    Bar,
+    BarChart,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from "recharts";
+import ChartCard from "../components/ChartCard";
+import StatCard from "../components/StatCard";
+import Timeline from "../components/Timeline";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:8000";
 
@@ -36,57 +48,208 @@ export async function getServerSideProps() {
   };
 }
 
-const LINKED_CARDS = [
-  { label: "Incidents", key: "incidents", href: "/incidents", color: "#ef4444" },
-  { label: "Recommendations", key: "insights", href: "/recommendations", color: "#3b82f6" },
-  { label: "Review Queue", key: "reviewQueue", href: "/review", color: "#8b5cf6" },
-];
-
-// Findings are surfaced as a count-only stat (no dedicated page yet).
 const STAT_CARDS = [
-  { label: "Findings", key: "findings", color: "#f97316" },
+  {
+    label: "Incidents",
+    key: "incidents",
+    gradient: "error",
+    icon: "🔴",
+    href: "/incidents",
+  },
+  { label: "Findings", key: "findings", gradient: "warning", icon: "🔍" },
+  {
+    label: "Recommendations",
+    key: "insights",
+    gradient: "info",
+    icon: "💡",
+    href: "/recommendations",
+  },
+  {
+    label: "Review Queue",
+    key: "reviewQueue",
+    gradient: "dark",
+    icon: "📋",
+    href: "/review",
+  },
 ];
-
-const styles = {
-  heading: { fontSize: "1.5rem", fontWeight: "700", marginBottom: "0.25rem" },
-  sub: { color: "#64748b", marginBottom: "2rem", fontSize: "0.95rem" },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-    gap: "1rem",
-  },
-  card: {
-    borderRadius: "0.5rem",
-    border: "1px solid #e2e8f0",
-    backgroundColor: "#ffffff",
-    padding: "1.25rem 1.5rem",
-    textDecoration: "none",
-    color: "inherit",
-    display: "block",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-  },
-  cardCount: { fontSize: "2.5rem", fontWeight: "800", lineHeight: "1" },
-  cardLabel: { fontSize: "0.875rem", color: "#64748b", marginTop: "0.4rem" },
-};
 
 export default function Dashboard({ counts }) {
+  // Demo chart data — will be replaced by real API data later
+  const CHART_DATA = [
+    { day: "Mon", incidents: counts.incidents > 0 ? 3 : 0 },
+    { day: "Tue", incidents: counts.incidents > 0 ? 5 : 0 },
+    { day: "Wed", incidents: counts.incidents > 0 ? 2 : 0 },
+    { day: "Thu", incidents: counts.incidents > 0 ? 7 : 0 },
+    { day: "Fri", incidents: counts.incidents > 0 ? 4 : 0 },
+    { day: "Sat", incidents: counts.incidents > 0 ? 1 : 0 },
+    { day: "Sun", incidents: counts.incidents > 0 ? 6 : 0 },
+  ];
+
+  const THROUGHPUT_DATA = Array.from({ length: 24 }, (_, i) => ({
+    hour: `${String(i).padStart(2, "0")}:00`,
+    events: Math.floor(Math.random() * 500 + 200),
+  }));
+
+  const ACTIVITY_ITEMS = [
+    {
+      id: 1,
+      title: "New critical incident detected",
+      description: "auth-server: brute-force login pattern",
+      time: "2 min ago",
+      color: "error",
+      icon: "🔴",
+    },
+    {
+      id: 2,
+      title: "Recommendation generated",
+      description: "Block IP range 203.0.113.0/24",
+      time: "15 min ago",
+      color: "info",
+      icon: "💡",
+    },
+    {
+      id: 3,
+      title: "Finding promoted to incident",
+      description: "Unusual outbound traffic on port 4444",
+      time: "1 hr ago",
+      color: "warning",
+      icon: "⚠️",
+    },
+    {
+      id: 4,
+      title: "Pipeline health check passed",
+      description: "All services reporting nominal",
+      time: "2 hr ago",
+      color: "success",
+      icon: "✅",
+    },
+  ];
   return (
     <>
-      <h1 style={styles.heading}>Dashboard</h1>
-      <p style={styles.sub}>Summary of current system state.</p>
-      <div style={styles.grid}>
-        {LINKED_CARDS.map(({ label, key, href, color }) => (
-          <Link key={key} href={href} style={styles.card}>
-            <div style={{ ...styles.cardCount, color }}>{counts[key]}</div>
-            <div style={styles.cardLabel}>{label}</div>
-          </Link>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-text-primary">Dashboard</h1>
+        <p className="mt-1 text-sm text-text-secondary">
+          Summary of current system state.
+        </p>
+      </div>
+
+      {/* Stat cards grid */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        {STAT_CARDS.map(({ label, key, gradient, icon, href }) => (
+          <StatCard
+            key={key}
+            label={label}
+            value={counts[key]}
+            gradient={gradient}
+            icon={icon}
+            href={href}
+          />
         ))}
-        {STAT_CARDS.map(({ label, key, color }) => (
-          <div key={key} style={{ ...styles.card, cursor: "default" }}>
-            <div style={{ ...styles.cardCount, color }}>{counts[key]}</div>
-            <div style={styles.cardLabel}>{label}</div>
-          </div>
-        ))}
+      </div>
+
+      {/* Charts + timeline */}
+      <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Incidents over time – bar chart */}
+        <div className="pt-6">
+          <ChartCard
+            title="Incidents This Week"
+            subtitle="Daily incident count"
+            gradient="dark"
+            footer="Updated just now"
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={CHART_DATA}
+                margin={{ top: 8, right: 8, bottom: 0, left: -20 }}
+              >
+                <XAxis
+                  dataKey="day"
+                  tick={{ fill: "#fff", fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fill: "#fff9", fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{
+                    background: "#1a2035",
+                    border: "none",
+                    borderRadius: 8,
+                    color: "#fff",
+                    fontSize: 12,
+                  }}
+                  itemStyle={{ color: "#fff" }}
+                  cursor={{ fill: "rgba(255,255,255,0.05)" }}
+                />
+                <Bar
+                  dataKey="incidents"
+                  fill="rgba(255,255,255,0.8)"
+                  radius={[4, 4, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+
+        {/* Pipeline throughput – area chart */}
+        <div className="pt-6">
+          <ChartCard
+            title="Pipeline Throughput"
+            subtitle="Events processed per hour"
+            gradient="info"
+            footer="Last 24 hours"
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={THROUGHPUT_DATA}
+                margin={{ top: 8, right: 8, bottom: 0, left: -20 }}
+              >
+                <XAxis
+                  dataKey="hour"
+                  tick={{ fill: "#fff", fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fill: "#fff9", fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{
+                    background: "#1a2035",
+                    border: "none",
+                    borderRadius: 8,
+                    color: "#fff",
+                    fontSize: 12,
+                  }}
+                  itemStyle={{ color: "#fff" }}
+                  cursor={{ stroke: "rgba(255,255,255,0.3)" }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="events"
+                  stroke="#fff"
+                  fill="rgba(255,255,255,0.2)"
+                  strokeWidth={2}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+      </div>
+
+      {/* Recent activity timeline */}
+      <div className="mt-8">
+        <div className="rounded-card bg-surface p-6 shadow-card">
+          <h3 className="mb-4 text-base font-semibold text-text-primary">
+            Recent Activity
+          </h3>
+          <Timeline items={ACTIVITY_ITEMS} />
+        </div>
       </div>
     </>
   );
