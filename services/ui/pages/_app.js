@@ -1,5 +1,9 @@
 import { useRouter } from "next/router";
+import { useCallback, useState } from "react";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import ThemeToggle from "../components/ThemeToggle";
 import "../styles/globals.css";
 
 const NAV_LINKS = [
@@ -7,37 +11,50 @@ const NAV_LINKS = [
   { href: "/incidents", label: "Incidents" },
   { href: "/recommendations", label: "Recommendations" },
   { href: "/review", label: "Review Queue" },
-  { href: "/figma-welcome", label: "Figma Welcome" },
-  { href: "/figma-box", label: "Figma Box" },
 ];
+
+/** Routes that use the auth layout (no sidebar/navbar/footer). */
+const AUTH_ROUTES = ["/sign-in", "/sign-up"];
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = useCallback(() => setSidebarOpen((o) => !o), []);
+  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
+
+  // Auth pages render without the shell
+  if (AUTH_ROUTES.includes(router.pathname)) {
+    return <Component {...pageProps} />;
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar navigation */}
-      <Sidebar links={NAV_LINKS} currentPath={router.pathname} />
+      <Sidebar
+        links={NAV_LINKS}
+        currentPath={router.pathname}
+        open={sidebarOpen}
+        onClose={closeSidebar}
+      />
 
-      {/* Main content area - offset by sidebar width */}
-      <div className="ml-64 flex flex-1 flex-col">
-        {/* External AI processing banner - always visible (governance requirement) */}
-        <div
-          className="flex items-center gap-2 border-b border-primary-100 bg-surface px-6 py-2 text-xs text-text-secondary"
-          role="complementary"
-          aria-label="External AI processing status"
-        >
-          <span className="inline-block h-2 w-2 rounded-full bg-text-disabled" />
-          <span>External AI Processing: Disabled</span>
-        </div>
+      {/* Main content area – responsive sidebar offset */}
+      <div className="flex flex-1 flex-col lg:ml-64">
+        <Navbar
+          currentPath={router.pathname}
+          links={NAV_LINKS}
+          onMenuToggle={toggleSidebar}
+          themeToggle={<ThemeToggle />}
+        />
 
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
           <div className="mx-auto max-w-7xl">
             <Component {...pageProps} />
           </div>
         </main>
+
+        <Footer />
       </div>
     </div>
   );
 }
-

@@ -8,6 +8,7 @@
  *  - icon        : React node (optional, SVG or emoji)
  *  - href        : optional link destination
  *  - footer      : optional footer text
+ *  - change      : optional "+12%" or "-3%" string – shows green/red chip
  */
 import Link from "next/link";
 
@@ -26,6 +27,7 @@ export default function StatCard({
   icon,
   href,
   footer,
+  change,
 }) {
   const inner = (
     <div className="relative flex items-center justify-between rounded-xl bg-surface p-4 shadow-card transition-shadow hover:shadow-card-hover">
@@ -44,25 +46,33 @@ export default function StatCard({
     </div>
   );
 
-  const card = (
+  // Determine footer content — change badge takes priority
+  const footerContent = change ? (
+    <p className="mt-2 flex items-center gap-1 px-4 text-xs text-text-secondary">
+      <span
+        className={`font-semibold ${change.startsWith("-") ? "text-error" : "text-success"}`}
+      >
+        {change}
+      </span>{" "}
+      {footer ?? "vs last period"}
+    </p>
+  ) : footer ? (
+    <p className="mt-2 px-4 text-xs text-text-secondary">{footer}</p>
+  ) : null;
+
+  return (
     <div className="pt-4">
       {href ? (
         <Link href={href} className="block no-underline">
           {inner}
-          {footer && (
-            <p className="mt-2 px-4 text-xs text-text-secondary">{footer}</p>
-          )}
+          {footerContent}
         </Link>
       ) : (
         <>
           {inner}
-          {footer && (
-            <p className="mt-2 px-4 text-xs text-text-secondary">{footer}</p>
-          )}
+          {footerContent}
         </>
       )}
     </div>
   );
-
-  return card;
 }
