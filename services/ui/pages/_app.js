@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "/recommendations", label: "Recommendations" },
   { href: "/review", label: "Review Queue" },
   { href: "/figma-welcome", label: "Figma Welcome" },
+  { href: "/figma-box", label: "Figma Box" },
 ];
 
 export default function App({ Component, pageProps }) {

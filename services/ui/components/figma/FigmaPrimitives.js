@@ -168,3 +168,16 @@ export function FigmaRichTextBlock({
     </div>
   );
 }
+
+export function FigmaCenteredCanvas({
+  children,
+  nodeId,
+  className = "min-h-[850px] rounded-card border border-primary-100 bg-[#e4e4e4] p-8 xl:p-16",
+  contentClassName = "mx-auto flex w-full max-w-[712px] flex-col gap-12",
+}) {
+  return (
+    <section className={className} data-node-id={nodeId}>
+      <div className={contentClassName}>{children}</div>
+    </section>
+  );
+}

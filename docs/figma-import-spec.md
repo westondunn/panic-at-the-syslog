@@ -71,6 +71,10 @@ Current starter primitives:
 - `FigmaCtaRow`
 - `FigmaOutlinedLinkCta`
 - `FigmaOutlinedLabelCta`
+- `FigmaPanelFooter`
+- `FigmaInfoList`
+- `FigmaRichTextBlock`
+- `FigmaCenteredCanvas`
 
 ## Fidelity and semantics policy
 
@@ -95,4 +99,3 @@ Current starter primitives:
 2. Extract/adjust primitives.
 3. Validate and review.
 4. Import next screen using primitives.
-
