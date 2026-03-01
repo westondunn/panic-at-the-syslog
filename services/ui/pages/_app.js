@@ -1,9 +1,6 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
-import ThemeToggle from "../components/ThemeToggle";
 import "../styles/globals.css";
 
 const NAV_LINKS = [
@@ -29,31 +26,20 @@ export default function App({ Component, pageProps }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Sidebar navigation */}
-      <Sidebar
-        links={NAV_LINKS}
-        currentPath={router.pathname}
-        open={sidebarOpen}
-        onClose={closeSidebar}
-      />
+    <div style={styles.wrapper}>
+      <Head>
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <title>Panic! At The Syslog</title>
+      </Head>
 
-      {/* Main content area – responsive sidebar offset */}
-      <div className="flex flex-1 flex-col lg:ml-64">
-        <Navbar
-          currentPath={router.pathname}
-          links={NAV_LINKS}
-          onMenuToggle={toggleSidebar}
-          themeToggle={<ThemeToggle />}
-        />
-
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
-          <div className="mx-auto max-w-7xl">
-            <Component {...pageProps} />
-          </div>
-        </main>
-
-        <Footer />
+      {/* External AI processing banner — always visible */}
+      <div
+        style={styles.banner}
+        role="complementary"
+        aria-label="External AI processing status"
+      >
+        <span style={styles.bannerDot} />
+        <span>External AI Processing: Disabled</span>
       </div>
     </div>
   );
