@@ -18,9 +18,9 @@ export default function App({ Component, pageProps }) {
       {/* Sidebar navigation */}
       <Sidebar links={NAV_LINKS} currentPath={router.pathname} />
 
-      {/* Main content area – offset by sidebar width */}
+      {/* Main content area - offset by sidebar width */}
       <div className="ml-64 flex flex-1 flex-col">
-        {/* External AI processing banner — always visible (governance requirement) */}
+        {/* External AI processing banner - always visible (governance requirement) */}
         <div
           className="flex items-center gap-2 border-b border-primary-100 bg-surface px-6 py-2 text-xs text-text-secondary"
           role="complementary"
@@ -39,3 +39,4 @@ export default function App({ Component, pageProps }) {
     </div>
   );
 }
+

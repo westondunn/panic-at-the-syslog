@@ -5,6 +5,7 @@ Welcome to **Panic! At The Syslog**, an event-driven pipeline that ingests route
 ## Quick links
 - Architecture: `docs/architecture.md`
 - Contracts: `docs/contracts.md`
+- Figma import spec: `docs/figma-import-spec.md`
 - Support matrix: `docs/support-matrix.md`
 - Governance:
   - Licensing: `docs/governance/licensing.md`
